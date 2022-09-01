@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100 bg-primary">
+    
+    <div class="card col-12 col-md-8">
+        <div class="card-header">
+            <h3 id="txtOrgName">Org Name</h3>
+        </div>
+        <div class="card-body">
+            <div class="d-flex">
+                <div class="col-4">
+                    <img id="imgProfile" src="images/hippo.png" alt="logo">
+                </div>
+                
+                <div class="col-8">
+                    <div class="d-flex justify-content-center">
+                        <h3 id="txtFirstName">First Name</h3>
+                        <h3 id="txtLastName">Last Name</h3>
+                    </div>
+                    <h4 id="txtJob" class="col-12 text-center">Job</h4>
+                </div>
+            </div>
+    
+            <div class="d-flex">
+                <div class="col-6">
+                    <p id="txtStreetAddress">Street Address</p>
+                    <p id="txtCity">City</p>
+                    <p id="txtState">State</p>
+                    <p id="txtZip">Zip</p>
+                </div>
+                <div class="col-6">
+                    <p id="txtPhoneNumber">Phone Number</p>
+                    <p id="txtHireDate">Hire Date</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <script src="js/app.js"></script>
+    <script>
+        var objCharacter;
+        $.getJSON('https://www.swollenhippo.com/getProfileDetailsByAPIKey.php',
+            {APIKey:'DuffManSays,Phrasing!',Codename:'Duchess'},
+            (result) => {
+                objCharacter =result;
+                console.log(objCharacter);
+
+                $('#txtOrgName').text(objCharacter.Agency);
+                $('#txtFirstName').text(objCharacter.FirstName);
+                $('#txtLastName').text(objCharacter.LastName);
+                $('#txtJob').text(objCharacter.Job);
+                $('#txtStreetAddress').text(objCharacter.Street1);
+                $('#txtCity').text(objCharacter.City);
+                $('#txtState').text(objCharacter.State);
+                $('#txtZip').text(objCharacter.ZIP);
+                $('#txtPhoneNumber').text(objCharacter.Phone);
+                $('#txtHireDate').text(objCharacter.HireDate);
+                $('#imgProfile').attr('src', objCharacter.Image);
+                $('#imgProfile').attr('alt', objCharacter.FirstName + ' ' + objCharacter.LastName + ' Profile Image');
+        });
+    </script>
+    
+</body>
+</html>
