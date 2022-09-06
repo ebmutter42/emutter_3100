@@ -1,3 +1,10 @@
+<!-- 
+    Name: Emily Mutter
+    Date: September 5, 2022
+    Class: CSC 3100-001
+    Description: Responsive profile badge with API
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,35 +17,32 @@
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100 bg-primary">
     
-    <div class="card col-12 col-md-8">
-        <div class="card-header">
-            <h3 id="txtOrgName">Org Name</h3>
-        </div>
+    <div class="card col-lg-3 col-md-4 col-sm-10 col-10">
+
         <div class="card-body">
-            <div class="d-flex">
-                <div class="col-4">
-                    <img id="imgProfile" src="images/hippo.png" alt="logo">
+            <div>
+                <div class="col-12">
+                    <img id="imgProfile" src="images/hippo.png" alt="profile picture" class="rounded-circle mx-auto d-block img-fluid">
                 </div>
                 
-                <div class="col-8">
-                    <div class="d-flex justify-content-center">
-                        <h3 id="txtFirstName">First Name</h3>
-                        <h3 id="txtLastName">Last Name</h3>
-                    </div>
-                    <h4 id="txtJob" class="col-12 text-center">Job</h4>
+                <div class="col-12">
+                    <h3 id="txtName" class="col-12 text-center" aria-label="First Name Last Name">First Name Last Name</h3>
+                    <p id="txtJob" class="col-12 text-center" aria-label="Job">Job</p>
                 </div>
             </div>
     
-            <div class="d-flex">
-                <div class="col-6">
-                    <p id="txtStreetAddress">Street Address</p>
-                    <p id="txtCity">City</p>
-                    <p id="txtState">State</p>
-                    <p id="txtZip">Zip</p>
+            <div>
+                <div class="col-12">
+                    <h4>Address</h4>
+                    <p id="txtStreetAddress" aria-label="Street Address">Street Address</p>
+                    <p id="txtCityState" aria-label="City and State">City, State</p>
+                    <p id="txtZip" aria-label="Zipcode">Zip</p>
                 </div>
-                <div class="col-6">
-                    <p id="txtPhoneNumber">Phone Number</p>
-                    <p id="txtHireDate">Hire Date</p>
+                <div class="col-12">
+                    <h4>Phone Number</h4>
+                    <p id="txtPhoneNumber" aria-label="Phone Number">Phone Number</p>
+                    <h4>Hire Date</h4>
+                    <p id="txtHireDate" aria-label="Hire Date">Hire Date</p>
                 </div>
             </div>
         </div>
@@ -58,12 +62,10 @@
                 console.log(objCharacter);
 
                 $('#txtOrgName').text(objCharacter.Agency);
-                $('#txtFirstName').text(objCharacter.FirstName);
-                $('#txtLastName').text(objCharacter.LastName);
+                $('#txtName').text(objCharacter.FirstName + ' ' + objCharacter.LastName);
                 $('#txtJob').text(objCharacter.Job);
                 $('#txtStreetAddress').text(objCharacter.Street1);
-                $('#txtCity').text(objCharacter.City);
-                $('#txtState').text(objCharacter.State);
+                $('#txtCityState').text(objCharacter.City + ', ' + objCharacter.State);
                 $('#txtZip').text(objCharacter.ZIP);
                 $('#txtPhoneNumber').text(objCharacter.Phone);
                 $('#txtHireDate').text(objCharacter.HireDate);
