@@ -5,118 +5,111 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="css/lib/bootstrap.min.css">
 </head>
-<body class="bg-primary-container">
-    <div class="col-4">
+<body class="bg-primary container">
+    <div class="col-12">
         <form class="mt-5">
-            <select id="txtCharacterSelect" class="form-control" aria-label="Select Character">
- 
+            <select id="txtCharacterSelect" aria-label="Select Character" class="form-control">
             </select>
             <button type="button" class="btn btn-warning" id="btnFindCharacter">Find</button>
         </form>
     </div>
-    
-    <div id="profileCard" class="card col-lg-3 col-md-4 col-sm-10 col-10 d-none">
-        <!--<div class="card-header">
-            <h3 id="txtOrgName">Org Name</h3>
-        </div> -->
-        <div class="card-body">
-            <div class="">
+    <div class="d-flex justify-content-center align-items-center vh-100 bg-primary container mt-5">
+        <div class="card col-12 col-md-4 col-lg-3 d-none" id="divProfileCard">
+            <div class="card-body">
+                <div class="col-12 d-flex justify-content-center">
+                    <img id="imgProfile" src="#" alt="logo" class="rounded-circle mw-100">
+                    
+                </div>    
                 <div class="col-12">
-                    <img id="imgProfile" src="images/hippo.png" alt="profile picture" class="rounded-circle mx-auto d-block img-fluid">
+                    <div class="d-flex justify-content-center">
+                        <h1 class="mb-0"><span class="text-bold" id="txtFirstName"></span></h1>
+                    </div>
+                </div>
+                <div class="col-12 mt-0">
+                    <div class="d-flex justify-content-center">
+                        <h3 class="mb-0"><span id="txtLastName"></span></h3>
+                    </div>
+                    <p id="txtJob" class="col-12 text-center"></p>
+                </div>
+                    
+                
+                
+                <div class=" mt-5">
+                    <h4>Address</h4>
+                        <p id="txtStreetAddress" class="mt-0 mb-0">Street Address</p>
+                        <p><span id="txtCity" class="mt-0 mb-0"></span>, <span id="txtState" class="mt-0 mb-0"></span> <span id="txtZIP" class="mt-0 mb-0"></span></p>
+                    <h4>Phone</h4>   
+                        <p id="txtPhoneNumber">Phone Number</p>
+                    <h4>Hire Date</h4>
+                        <p id="txtHireDate">Hire Date</p>
                 </div>
                 
-                <div class="col-12">
-                    <h3 id="txtName" class="col-12 text-center" aria-label="First Name Last Name">First Name Last Name</h3>
-                    <p id="txtJob" class="col-12 text-center" aria-label="Job">Job</p>
-                </div>
-            </div>
-    
-            <div class="">
-                <div class="col-12">
-                    <h4>Address</h4>
-                    <p id="txtStreetAddress" aria-label="Street Address">Street Address</p>
-                    <p id="txtCityState" aria-label="City and State">City, State</p>
-                    <p id="txtZip" aria-label="Zipcode">Zip</p>
-                </div>
-                <div class="col-12">
-                    <h4>Phone Number</h4>
-                    <p id="txtPhoneNumber" aria-label="Phone Number">Phone Number</p>
-                    <h4>Hire Date</h4>
-                    <p id="txtHireDate" aria-label="Hire Date">Hire Date</p>
-                </div>
+                
             </div>
         </div>
-
     </div>
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-    <script src="js/app.js"></script>
+    
+    <script src="js/lib/jquery-3.6.0.min.js"></script>
+    <script src="js/lib/bootstrap.bundle.min.js"></script>
     <script>
-
-        $.getJSON('https://swollenhippo.com/getCharactersByAPIKey.php?APIKey=Mickey2022!', (result)=>{
+        $.getJSON('https://swollenhippo.com/getCharactersByAPIKey.php?APIKey=Mickey2022!',(result) =>{
             console.table(result);
             let arrCharacters = result;
-            console.log(arrCharacters[0]);
-
+            //console.log(arrCharacters[0]);
+           
             arrCharacters.forEach(function(character) {
                 console.log(character);
-                $('#txtCharacterSelect').append('<option value="' + character.CodeName + '">' + character.FirstName +' ' + character.LastName + '</option>')
+                $('#txtCharacterSelect').append('<option value="' + character.CodeName + '">' + character.FirstName + ' ' + character.LastName + '</option>');
             });
-
-        });
-
+           
+            
+        })
         $('#btnFindCharacter').on('click', function(){
             let strCodename = $('#txtCharacterSelect option:selected').val();
-            $('#profileCard').removeClass('d-none' );
             var objCharacter;
-            $.getJSON('https://www.swollenhippo.com/getProfileDetailsByAPIKey.php',
-                {APIKey:'Mickey2022!',Codename:strCodename},
+            $.getJSON('https://swollenhippo.com/getProfileDetailsByAPIKey.php', 
+                {APIKey: 'Mickey2022!',Codename: strCodename}, 
                 (result) => {
-                    objCharacter =result;
+                    objCharacter= result;
+                    $('#divProfileCard').removeClass('d-none');
                     console.log(objCharacter);
-
                     $('#txtOrgName').text(objCharacter.Agency);
-                    $('#txtName').text(objCharacter.FirstName + ' ' + objCharacter.LastName);
-                    $('#txtJob').text(objCharacter.Job);
+                    $('#txtFirstName').text(objCharacter.FirstName);
+                    $('#txtLastName').text(objCharacter.LastName);
                     $('#txtStreetAddress').text(objCharacter.Street1);
-                    $('#txtCityState').text(objCharacter.City + ', ' + objCharacter.State);
-                    $('#txtZip').text(objCharacter.ZIP);
+                    $('#txtCity').text(objCharacter.City);
+                    $('#txtState').text(objCharacter.State);
+                    $('#txtZIP').text(objCharacter.ZIP);
                     $('#txtPhoneNumber').text(objCharacter.Phone);
                     $('#txtHireDate').text(objCharacter.HireDate);
-                    $('#imgProfile').attr('src', objCharacter.Image);
-                    $('#imgProfile').attr('alt', objCharacter.FirstName + ' ' + objCharacter.LastName + ' Profile Image');
+                    $('#txtJob').text(objCharacter.Job);
+                    $('#imgProfile').attr('src',objCharacter.Image);
+                    $('#imgProfile').attr('alt',objCharacter.FirstName + ' ' + objCharacter.LastName + ' Profile Image');
             });
         })
-
-        
-
         /*
         var objCharacter;
-        $.getJSON('https://www.swollenhippo.com/getProfileDetailsByAPIKey.php',
-            {APIKey:'DuffManSays,Phrasing!',Codename:'Duchess'},
+        $.getJSON('https://swollenhippo.com/getProfileDetailsByAPIKey.php', 
+            {APIKey: 'DuffManSays,Phrasing!',Codename: 'Duchess'}, 
             (result) => {
-                objCharacter =result;
+                objCharacter= result;
                 console.log(objCharacter);
-
                 $('#txtOrgName').text(objCharacter.Agency);
-                $('#txtName').text(objCharacter.FirstName + ' ' + objCharacter.LastName);
-                $('#txtJob').text(objCharacter.Job);
+                $('#txtFirstName').text(objCharacter.FirstName);
+                $('#txtLastName').text(objCharacter.LastName);
                 $('#txtStreetAddress').text(objCharacter.Street1);
-                $('#txtCityState').text(objCharacter.City + ', ' + objCharacter.State);
-                $('#txtZip').text(objCharacter.ZIP);
+                $('#txtCity').text(objCharacter.City);
+                $('#txtState').text(objCharacter.State);
+                $('#txtZIP').text(objCharacter.ZIP);
                 $('#txtPhoneNumber').text(objCharacter.Phone);
                 $('#txtHireDate').text(objCharacter.HireDate);
-                $('#imgProfile').attr('src', objCharacter.Image);
-                $('#imgProfile').attr('alt', objCharacter.FirstName + ' ' + objCharacter.LastName + ' Profile Image');
+                $('#txtJob').text(objCharacter.Job);
+                $('#imgProfile').attr('src',objCharacter.Image);
+                $('#imgProfile').attr('alt',objCharacter.FirstName + ' ' + objCharacter.LastName + ' Profile Image');
         });
         */
-
     </script>
-    
 </body>
 </html>
