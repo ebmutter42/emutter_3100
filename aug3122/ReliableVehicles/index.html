@@ -11,13 +11,28 @@
 </head>
 <body>
     
+    <table id="tblEmployees" class="table">
+        <thead>
+            <tr><th>First Name</th> <th>Last Name</th> <th>Hourly Wage</th> <th>Hours Worked</th> <th>Total Pay</th> <th></th></tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
 
     <script src="js/lib/jquery-3.6.1.min.js"></script>
     <script src="js/lib/bootstrap.bundle.min.js"></script>
 
     <script>
-        $.getJSON('http://www.swollenhippo.com/ReliableVehicles/employees.php?APIKey=Mickey2022!', (result)=>{
-            console.table(result);
+        $.getJSON('https://www.swollenhippo.com/ReliableVehicles/employees.php?APIKey=Mickey2022!', (arrEmployees)=>{
+            $(document).on('click', '.btnEditEmployee', function(){
+                let strFirstName = $(this).attr('data-firstname');
+                console.log('Clicked Employee Edit for ' + strFirstName);
+            })
+            arrEmployees.forEach(function(objEmployee){
+                let strTableRow = '<tr><td>' + objEmployee.FirstName + '</td><td>' + objEmployee.LastName + '</td><td>' + objEmployee.HourlyRate + '</td><td>' + objEmployee.WeeklyHrs + '</td><td>' + '$' + (objEmployee.HourlyRate * objEmployee.WeeklyHrs) + '</td><td><button class="btn btn-primary btnEditEmployee" type="button" data-firstname="' + objEmployee.FirstName + '">Edit</button></td></tr>';
+                $('#tblEmployees tbody').append(strTableRow);  
+            })
         })
     </script>
 </body>
