@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New User</title>
+
+    <link href="css/lib/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-primary vh-100">
+    
+    <div class="card col-6 offset-3 mt-5">
+        <div class="card-header">
+            <h3>Create New Account</h3>
+        </div>
+
+        <div class="card-body">
+            <form>
+                <div class="">
+                    <input class="form-control" id="txtEmail" type ="email" aria-label="Enter Email Address" placeholder="Email Address" required>
+                    <div class="invalid-feedback"> You Must Enter an Email</div>
+                </div>
+                <div class="">
+                    <input class="form-control" id="txtFirstName" type ="text" aria-label="First Name" placeholder="First Name" required>
+                    <div class="invalid-feedback"> You Must Enter a First Name</div>
+                </div>
+                <div class="">
+                    <input class="form-control" id="txtLastName" type ="text" aria-label="Last Name" placeholder="Last Name" required>
+                    <div class="invalid-feedback"> You Must Enter a Last Name</div>
+                </div>
+                <div class="">
+                    <input class="form-control" id="txtPassword" type ="password" aria-label="Enter Password" placeholder="Password" required>
+                    <div class="invalid-feedback"> You Must Enter a Password</div>
+                </div>
+
+                <button class="btn btn-primary" type="button" id="btnCreate">Create User</button>
+
+            </form>
+        </div>
+
+    </div>
+
+    <script src="js/lib/bootstrap.bundle.min.js"></script>
+    <script src="js/lib/jquery-3.6.1.min.js"></script>
+    <script src="js/lib/sweetalert2@11.js"></script>
+    <script>
+        $('#btnCreate').on('click', function(){
+            let strEmail = $('#txtEmail').val();
+            let strFirstName = $('#txtFirstName').val();
+            let strLastName = $('#txtLastName').val();
+            let strPassword = $('#txtPassword').val();
+
+            let blnError = false;
+            let strErrorMessage = '';
+            if(!strEmail){
+                blnError = true;
+                strErrorMessage += '<p>Email cannot be blank</p>';
+            }
+            if(!strFirstName){
+                blnError = true;
+                strErrorMessage += '<p>First Name cannot be blank</p>';
+            }
+            if(!strLastName){
+                blnError = true;
+                strErrorMessage += '<p>Last Name cannot be blank</p>';
+            }
+            if(!strPassword){
+                blnError = true;
+                strErrorMessage += '<p>Password cannot be blank</p>';
+            }
+
+            if(blnError == false){
+                /*$.post('https://www.swollenhippo.com/ReliableVehicles/api/users.php', {email:strEmail, firstName:strFirstName, lastName:strLastName, password:strPassword}).done(function(result){
+                console.log(result);
+                })*/
+                console.log('Check Passed');
+            } else{
+                /*
+                Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                html: strErrorMessage
+                })*/
+            }
+        })
+    </script>
+
+</body>
+</html>
+
+<!-- CRUD -->
+<!-- Add 2 sudo classes (valid & invaldid)
+    Take results & create JavaScript Object-->
