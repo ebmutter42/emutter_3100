@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New User</title>
+
+    <link href="css/lib/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-primary vh-100">
+
+    <button class="btn btn-warning col-12 mt-3" type="button" id="btnLogout">Logout</button>
+    
+    <div class="card col-6 offset-3 mt-5" id="divLogin">
+        <div class="card-header">
+            <h3>Login</h3>
+        </div>
+
+        <div class="card-body">
+            <form>
+                <div class="">
+                    <input class="form-control" id="txtEmail" type ="email" aria-label="Enter Email Address" placeholder="Email Address" required>
+                </div>
+                <div class="">
+                    <input class="form-control mt-2" id="txtPassword" type ="password" aria-label="Enter Password" placeholder="Password" required>
+                </div>
+
+                <button class="btn btn-primary mt-3" type="button" id="btnLogin">Login</button>
+
+            </form>
+        </div>
+
+    </div>
+
+    <div style="display:none;" class="card col-6 offset-3 mt-5" id="divInventory">
+        <div class="card-header">
+            <h3>Inventory</h3>
+        </div>
+
+        <div class="card-body">
+            <form>
+                <input class="form-control" id="txtInventoryMake" placeholder="Make of Vehicle" aria-label="Enter Make of Vehicle">
+                <button class="btn btn-primary col-12" id="btnInventorySearch" type="button">Search</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="js/lib/bootstrap.bundle.min.js"></script>
+    <script src="js/lib/jquery-3.6.1.min.js"></script>
+    <script src="js/lib/sweetalert2@11.js"></script>
+    <script>
+        if(sessionStorage.getItem('SessionID')){
+            $('#divInventory').slideDown();
+            $('#divLogin').slideUp();
+        }
+
+        $('#btnInventorySearch').on('click', function(){
+            const strSessionID = sessionStorage.getItem('SessionID');
+            let strMake = $('#txtInventoryMake').val();
+            $.getJSON('https://www.swollenhippo.com/ReliableVehicles/api/inventory.php', {session:strSessionID, make:strMake}).done(function(result){
+                console.table(result);
+            })
+        })
+
+        $('#btnLogout').on('click', function(){
+            sessionStorage.removeItem('SessionID');
+            $('#divLogin').slideDown();
+            $('#divInventory').slideUp();
+            $('#txtInventoryMake').val('');
+        })
+
+            
+
+
+        $('#btnLogin').on('click', function(){
+            let strEmail = $('#txtEmail').val();
+            let strPassword = $('#txtPassword').val();
+
+            let frmNewUser = document.querySelector('form')
+            frmNewUser.reportValidity();
+
+            let blnError = false;
+            let strErrorMessage = '';
+            if(!strEmail){
+                blnError = true;
+                strErrorMessage += '<p>Email cannot be blank</p>';
+            }
+            if(!strPassword){
+                blnError = true;
+                strErrorMessage += '<p>Password cannot be blank</p>';
+            }
+
+            if(blnError == false){
+                $.post('https://www.swollenhippo.com/ReliableVehicles/api/sessions.php', {email:strEmail, password:strPassword}).done(function(result){
+                
+                console.log(result);
+                const obj = JSON.parse(result);
+
+                console.log(obj);
+
+                if(obj.SessionID){
+                    $('#txtEmail').val('');
+                    $('#txtPassword').val('');
+                    sessionStorage.setItem("SessionID", obj.SessionID)
+                    $('#divInventory').slideDown();
+                    $('#divLogin').slideUp();
+                } else {
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Oh No',
+                    text: 'Username or Password Incorrect'
+                    })
+                }
+                })
+            }
+
+            
+        })
+    </script>
+
+</body>
+</html>
+
+<!-- CRUD -->
+<!-- Add 2 sudo classes (valid & invaldid)
+    Take results & create JavaScript Object-->

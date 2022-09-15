@@ -1,3 +1,10 @@
+<!--
+        Emily Mutter
+        15 Sept 2022
+        CSC 3100-001
+        Create New User 
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,22 +26,18 @@
             <form>
                 <div class="">
                     <input class="form-control" id="txtEmail" type ="email" aria-label="Enter Email Address" placeholder="Email Address" required>
-                    <div class="invalid-feedback"> You Must Enter an Email</div>
                 </div>
                 <div class="">
-                    <input class="form-control" id="txtFirstName" type ="text" aria-label="First Name" placeholder="First Name" required>
-                    <div class="invalid-feedback"> You Must Enter a First Name</div>
+                    <input class="form-control mt-2" id="txtFirstName" type ="text" aria-label="First Name" placeholder="First Name" required>
                 </div>
                 <div class="">
-                    <input class="form-control" id="txtLastName" type ="text" aria-label="Last Name" placeholder="Last Name" required>
-                    <div class="invalid-feedback"> You Must Enter a Last Name</div>
+                    <input class="form-control mt-2" id="txtLastName" type ="text" aria-label="Last Name" placeholder="Last Name" required>
                 </div>
                 <div class="">
-                    <input class="form-control" id="txtPassword" type ="password" aria-label="Enter Password" placeholder="Password" required>
-                    <div class="invalid-feedback"> You Must Enter a Password</div>
+                    <input class="form-control mt-2" id="txtPassword" type ="password" aria-label="Enter Password" placeholder="Password" required>
                 </div>
 
-                <button class="btn btn-primary" type="button" id="btnCreate">Create User</button>
+                <button class="btn btn-primary mt-3" type="button" id="btnCreate">Create User</button>
 
             </form>
         </div>
@@ -50,6 +53,9 @@
             let strFirstName = $('#txtFirstName').val();
             let strLastName = $('#txtLastName').val();
             let strPassword = $('#txtPassword').val();
+
+            let frmNewUser = document.querySelector('form')
+            frmNewUser.reportValidity();
 
             let blnError = false;
             let strErrorMessage = '';
@@ -71,24 +77,31 @@
             }
 
             if(blnError == false){
-                /*$.post('https://www.swollenhippo.com/ReliableVehicles/api/users.php', {email:strEmail, firstName:strFirstName, lastName:strLastName, password:strPassword}).done(function(result){
-                console.log(result);
-                })*/
-                console.log('Check Passed');
-            } else{
-                /*
-                Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                html: strErrorMessage
-                })*/
+                $.post('https://www.swollenhippo.com/ReliableVehicles/api/users.php', {email:strEmail, firstName:strFirstName, lastName:strLastName, password:strPassword}).done(function(result){
+
+                const obj = JSON.parse(result);
+
+                console.log(obj.Outcome);
+
+                if(!obj.Outcome){
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Uh Oh...',
+                    text: obj.Error
+                    })
+                } else {
+                    Swal.fire({
+                    icon: 'success',
+                    title: obj.Outcome,
+                    })
+                }
+                })
             }
+
+            
         })
     </script>
 
 </body>
 </html>
 
-<!-- CRUD -->
-<!-- Add 2 sudo classes (valid & invaldid)
-    Take results & create JavaScript Object-->
