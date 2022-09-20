@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form>
+                    <form id="formLogin">
                         <div class="">
                             <input class="form-control" id="txtEmail" type ="email" aria-label="Enter Email Address" placeholder="Email Address" required>
                         </div>
@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form>
+                    <form id="formCreateAccount">
                         <div class="">
                             <input class="form-control" id="txtEmail" type ="email" aria-label="Enter Email Address" placeholder="Email Address" required>
                         </div>
@@ -148,8 +148,8 @@
             let strEmail = $('#txtEmail').val();
             let strPassword = $('#txtPassword').val();
 
-            let frmNewUser = document.querySelector('form');
-            frmNewUser.reportValidity();
+            let frmLogin = document.querySelector('#formLogin');
+            frmLogin.reportValidity();
 
             let blnError = false;
             let strErrorMessage = '';
@@ -196,7 +196,7 @@
             let strLastName = $('#txtLastName').val();
             let strPassword = $('#txtPassword').val();
 
-            let frmNewUser = document.querySelector('form');
+            let frmNewUser = document.querySelector('#formCreateAccount');
             frmNewUser.reportValidity();
 
             let blnError = false;
@@ -250,8 +250,8 @@
                     $('#txtPassword').val('');
                     sessionStorage.setItem("SessionID", obj.SessionID)
                     $('#divInventory').slideDown();
-                    $('#divLogin').slideUp();
-                    $('#divWelcome').slideUp();
+                    $('#divCreateAccount').slideUp();
+                    $('#divMessage').slideUp();
                 }
                 })
             }
