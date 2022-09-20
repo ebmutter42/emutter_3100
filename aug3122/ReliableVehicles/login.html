@@ -8,43 +8,98 @@
 
     <link href="css/lib/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-primary vh-100">
-
-    <button class="btn btn-warning col-12 mt-3" type="button" id="btnLogout">Logout</button>
-    
-    <div class="card col-6 offset-3 mt-5" id="divLogin">
-        <div class="card-header">
-            <h3>Login</h3>
+<body class="vh-100">
+    <div class="d-flex" id="divHome">
+        <div class="col-lg-6 d-none d-lg-block mt-5 text-center" id="divWelcome">
+            <h2>Where Customers Become Family</h2>
+            <img src="images/lib/hippo.png" class="mt-5" aria-label="Hippo Image">
+            <h3 class="mt-5">Reliable Vehicles is the home to the best values in the Upper Cumberland for new and used quality transportation.</h3>
         </div>
+        <div class="col-lg-6 col-md-12 bg-primary">
 
-        <div class="card-body">
-            <form>
-                <div class="">
-                    <input class="form-control" id="txtEmail" type ="email" aria-label="Enter Email Address" placeholder="Email Address" required>
-                </div>
-                <div class="">
-                    <input class="form-control mt-2" id="txtPassword" type ="password" aria-label="Enter Password" placeholder="Password" required>
+            <div class="card col-10 offset-1 mt-5" id="divLogin">
+                <div class="card-header">
+                    <h3 style="text-align:center;">Login</h3>
                 </div>
 
-                <button class="btn btn-primary mt-3" type="button" id="btnLogin">Login</button>
+                <div class="card-body">
+                    <form>
+                        <div class="">
+                            <input class="form-control" id="txtEmail" type ="email" aria-label="Enter Email Address" placeholder="Email Address" required>
+                        </div>
+                        <div class="">
+                            <input class="form-control mt-2" id="txtPassword" type ="password" aria-label="Enter Password" placeholder="Password" required>
+                        </div>
 
-            </form>
+                        <button class="btn btn-primary mt-3 col-12" type="button" id="btnLogin">Login</button>
+
+                        <button class="btn btn-dark mt-3 col-12" type="button" id="btnRegister">Register Account</button>
+
+                    </form>
+                </div>
+
+            </div>
         </div>
-
     </div>
 
-    <div style="display:none;" class="card col-6 offset-3 mt-5" id="divInventory">
-        <div class="card-header">
-            <h3>Inventory</h3>
+    <div class="d-flex" id="divCreate">
+
+        <div class="col-lg-6 col-md-12 bg-primary">
+            <div style="display:none;" class="card col-10 offset-1 mt-5" id="divCreateAccount">
+                <div class="card-header">
+                    <h3>Create New Account</h3>
+                </div>
+
+                <div class="card-body">
+                    <form>
+                        <div class="">
+                            <input class="form-control" id="txtEmail" type ="email" aria-label="Enter Email Address" placeholder="Email Address" required>
+                        </div>
+                        <div class="">
+                            <input class="form-control mt-2" id="txtFirstName" type ="text" aria-label="First Name" placeholder="First Name" required>
+                        </div>
+                        <div class="">
+                            <input class="form-control mt-2" id="txtLastName" type ="text" aria-label="Last Name" placeholder="Last Name" required>
+                        </div>
+                        <div class="">
+                            <input class="form-control mt-2" id="txtPassword" type ="password" aria-label="Enter Password" placeholder="Password" required>
+                        </div>
+
+                        <button class="btn btn-primary mt-3 col-12" type="button" id="btnCreate">Create User</button>
+                        <button class="btn btn-dark mt-3 col-12" type="button" id="btnCancel">Cancel</button>
+
+                    </form>
+                </div>
+            </div>
+
         </div>
 
-        <div class="card-body">
-            <form>
-                <input class="form-control" id="txtInventoryMake" placeholder="Make of Vehicle" aria-label="Enter Make of Vehicle">
-                <button class="btn btn-primary col-12" id="btnInventorySearch" type="button">Search</button>
-            </form>
+        <div style="display:none;" class="col-lg-6 d-md-none mt-5 text-center" id="divMessage">
+            <h2>Account Registration</h2>
+            <img src="images/lib/hippo.png" class="mt-5" aria-label="Hippo Image">
+            <h3 class="mt-5">Thank you for registering with us. After registration you will be able to view our inventory, schedule an appointment, and make an order.</h3>
         </div>
+    </div>
 
+
+    <div class="bg-primary">
+        <div style="display:none;" class="card col-6 offset-3 mt-5" id="divInventory">
+
+            <div class="card-header d-flex">
+                <h3>Inventory</h3>
+                <button class="btn btn-warning col-4 offset-6" type="button" id="btnLogout">Logout</button>
+            </div>
+
+            <div class="card-body">
+                <form>
+                    <input class="form-control" id="txtInventoryMake" placeholder="Make of Vehicle" aria-label="Enter Make of Vehicle">
+                    <button class="btn btn-primary col-12 mt-2" id="btnInventorySearch" type="button">Search</button>
+                    <button class="btn btn-primary col-12 mt-2" id="btnInventoryClear" type="button">Clear</button>
+
+                </form>
+            </div>
+
+        </div>
     </div>
 
     <script src="js/lib/bootstrap.bundle.min.js"></script>
@@ -67,8 +122,23 @@
         $('#btnLogout').on('click', function(){
             sessionStorage.removeItem('SessionID');
             $('#divLogin').slideDown();
+            $('#divWelcome').slideDown();
             $('#divInventory').slideUp();
             $('#txtInventoryMake').val('');
+        })
+
+        $('#btnRegister').on('click', function(){
+            $('#divWelcome').slideUp();
+            $('#divLogin').slideUp();
+            $('#divCreateAccount').slideDown();
+            $('#divMessage').slideDown();
+        })
+
+        $('#btnCancel').on('click', function(){
+            $('#divWelcome').slideDown();
+            $('#divLogin').slideDown();
+            $('#divCreateAccount').slideUp();
+            $('#divMessage').slideUp();
         })
 
             
@@ -106,12 +176,82 @@
                     sessionStorage.setItem("SessionID", obj.SessionID)
                     $('#divInventory').slideDown();
                     $('#divLogin').slideUp();
+                    $('#divWelcome').slideUp();
                 } else {
                     Swal.fire({
                     icon: 'error',
                     title: 'Oh No',
                     text: 'Username or Password Incorrect'
                     })
+                }
+                })
+            }
+
+            
+        })
+
+        $('#btnCreate').on('click', function(){
+            let strEmail = $('#txtEmail').val();
+            let strFirstName = $('#txtFirstName').val();
+            let strLastName = $('#txtLastName').val();
+            let strPassword = $('#txtPassword').val();
+
+            let frmNewUser = document.querySelector('form')
+            frmNewUser.reportValidity();
+
+            let blnError = false;
+            let strErrorMessage = '';
+            if(!strEmail){
+                blnError = true;
+                strErrorMessage += '<p>Email cannot be blank</p>';
+            }
+            if(!strFirstName){
+                blnError = true;
+                strErrorMessage += '<p>First Name cannot be blank</p>';
+            }
+            if(!strLastName){
+                blnError = true;
+                strErrorMessage += '<p>Last Name cannot be blank</p>';
+            }
+            if(!strPassword){
+                blnError = true;
+                strErrorMessage += '<p>Password cannot be blank</p>';
+            }
+
+            if(blnError == false){
+                $.post('https://www.swollenhippo.com/ReliableVehicles/api/users.php', {email:strEmail, firstName:strFirstName, lastName:strLastName, password:strPassword}).done(function(result){
+
+                const obj = JSON.parse(result);
+
+                console.log(obj.Outcome);
+
+                if(!obj.Outcome){
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Uh Oh...',
+                    text: obj.Error
+                    })
+                } else {
+                    Swal.fire({
+                    icon: 'success',
+                    title: obj.Outcome,
+                    })
+                }
+                })
+                $.post('https://www.swollenhippo.com/ReliableVehicles/api/sessions.php', {email:strEmail, password:strPassword}).done(function(result){
+                
+                console.log(result);
+                const obj = JSON.parse(result);
+
+                console.log(obj);
+
+                if(obj.SessionID){
+                    $('#txtEmail').val('');
+                    $('#txtPassword').val('');
+                    sessionStorage.setItem("SessionID", obj.SessionID)
+                    $('#divInventory').slideDown();
+                    $('#divLogin').slideUp();
+                    $('#divWelcome').slideUp();
                 }
                 })
             }
@@ -125,4 +265,21 @@
 
 <!-- CRUD -->
 <!-- Add 2 sudo classes (valid & invaldid)
-    Take results & create JavaScript Object-->
+    Take results & create JavaScript Object
+    
+    Can use past assignments, online docs (no stackoverflow), can use personal notes
+    accessibility (semantic tagging, buttons are buttons not div, images need aria-label or alt tag, forms should be form not div)
+    can use css or bootstrap, can use vanilla js or jquery
+    CRUD (post, put, get, ____)
+    will be given location & endpoint
+    there will be starter pages
+    functionality first, then style
+    !SyntaX!
+    do not spend all of your time on one issue
+    may use cdn or local resources
+    uploading compressed file
+    can use desktop environment
+    commit frequently
+    separate repo for test
+    bring power cords
+    -->
