@@ -42,10 +42,10 @@
         </div>
     </div>
 
-    <div class="d-flex" id="divCreate">
+    <div class="d-flex d-none" id="divCreate">
 
         <div class="col-lg-6 col-md-12 bg-primary">
-            <div style="display:none;" class="card col-10 offset-1 mt-5" id="divCreateAccount">
+            <div class="card col-10 offset-1 mt-5" id="divCreateAccount">
                 <div class="card-header">
                     <h3>Create New Account</h3>
                 </div>
@@ -74,7 +74,7 @@
 
         </div>
 
-        <div style="display:none;" class="col-lg-6 d-md-none mt-5 text-center" id="divMessage">
+        <div class="col-lg-6 d-none d-lg-block mt-5 text-center" id="divMessage">
             <h2>Account Registration</h2>
             <img src="images/lib/hippo.png" class="mt-5" aria-label="Hippo Image">
             <h3 class="mt-5">Thank you for registering with us. After registration you will be able to view our inventory, schedule an appointment, and make an order.</h3>
@@ -83,7 +83,7 @@
 
 
     <div class="bg-primary">
-        <div style="display:none;" class="card col-6 offset-3 mt-5" id="divInventory">
+        <div class="card col-6 offset-3 mt-5 d-none" id="divInventory">
 
             <div class="card-header d-flex">
                 <h3>Inventory</h3>
@@ -93,6 +93,20 @@
             <div class="card-body">
                 <form>
                     <input class="form-control" id="txtInventoryMake" placeholder="Make of Vehicle" aria-label="Enter Make of Vehicle">
+                    <table id="tblInventory" class="table d-none">
+                        <thead>
+                            <tr>
+                                <th>Make</th> 
+                                <th>Model</th> 
+                                <th>Year</th> 
+                                <th>Mileage</th> 
+                                <th>Stocknumber</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
                     <button class="btn btn-primary col-12 mt-2" id="btnInventorySearch" type="button">Search</button>
                     <button class="btn btn-primary col-12 mt-2" id="btnInventoryClear" type="button">Clear</button>
 
@@ -106,39 +120,47 @@
     <script src="js/lib/jquery-3.6.1.min.js"></script>
     <script src="js/lib/sweetalert2@11.js"></script>
     <script>
+        $('#divHome').slideDown();
+
         if(sessionStorage.getItem('SessionID')){
-            $('#divInventory').slideDown();
-            $('#divLogin').slideUp();
+            $('#divInventory').removeClass('d-none');
+            $('divHome').addClass('d-none');
         }
 
         $('#btnInventorySearch').on('click', function(){
             const strSessionID = sessionStorage.getItem('SessionID');
             let strMake = $('#txtInventoryMake').val();
-            $.getJSON('https://www.swollenhippo.com/ReliableVehicles/api/inventory.php', {session:strSessionID, make:strMake}).done(function(result){
-                console.table(result);
+            $.getJSON('https://www.swollenhippo.com/ReliableVehicles/api/inventory.php', {session:strSessionID, make:strMake}).done(function(arrInventory){
+
+                arrInventory.forEach(function(objItem){
+                    let strTableRow = '<tr><td>' + objItem.Make + '</td><td>' + objItem.Model + '</td><td>' + objItem.Year + '</td><td>' + objItem.Mileage + '</td><td>' + objItem.StockNumber + '</td></tr>';
+                    $('#tblInventory tbody').append(strTableRow);  
+                })
             })
+            $('#tblInventory').removeClass('d-none');
         })
+
+        $('#btnInventoryClear').on('click', function(){
+            $('#tblInventory').addClass('d-none');
+            $('#txtInventoryMake').val('');
+        })
+        
 
         $('#btnLogout').on('click', function(){
             sessionStorage.removeItem('SessionID');
-            $('#divLogin').slideDown();
-            $('#divWelcome').slideDown();
-            $('#divInventory').slideUp();
+            $('#divHome').removeClass('d-none');
+            $('#divInventory').addClass('d-none');
             $('#txtInventoryMake').val('');
         })
 
         $('#btnRegister').on('click', function(){
-            $('#divWelcome').slideUp();
-            $('#divLogin').slideUp();
-            $('#divCreateAccount').slideDown();
-            $('#divMessage').slideDown();
+            $('#divHome').addClass('d-none');
+            $('#divCreate').removeClass('d-none');
         })
 
         $('#btnCancel').on('click', function(){
-            $('#divWelcome').slideDown();
-            $('#divLogin').slideDown();
-            $('#divCreateAccount').slideUp();
-            $('#divMessage').slideUp();
+            $('#divHome').removeClass('d-none');
+            $('#divCreate').addClass('d-none');
         })
 
             
@@ -174,9 +196,8 @@
                     $('#txtEmail').val('');
                     $('#txtPassword').val('');
                     sessionStorage.setItem("SessionID", obj.SessionID)
-                    $('#divInventory').slideDown();
-                    $('#divLogin').slideUp();
-                    $('#divWelcome').slideUp();
+                    $('#divInventory').removeClass('d-none');
+                    $('#divHome').addClass('d-none');
                 } else {
                     Swal.fire({
                     icon: 'error',
@@ -198,7 +219,7 @@
 
             let frmNewUser = document.querySelector('#formCreateAccount');
             frmNewUser.reportValidity();
-
+            
             let blnError = false;
             let strErrorMessage = '';
             if(!strEmail){
@@ -236,9 +257,7 @@
                     icon: 'success',
                     title: obj.Outcome,
                     })
-                }
-                })
-                $.post('https://www.swollenhippo.com/ReliableVehicles/api/sessions.php', {email:strEmail, password:strPassword}).done(function(result){
+
                 
                 console.log(result);
                 const obj = JSON.parse(result);
@@ -249,15 +268,18 @@
                     $('#txtEmail').val('');
                     $('#txtPassword').val('');
                     sessionStorage.setItem("SessionID", obj.SessionID)
-                    $('#divInventory').slideDown();
-                    $('#divCreateAccount').slideUp();
-                    $('#divMessage').slideUp();
+                    $('#divInventory').removeClass('d-none');
+                    $('#divCreate').addClass('d-none');
+                }
+                
                 }
                 })
+                
             }
 
             
         })
+        
     </script>
 
 </body>
