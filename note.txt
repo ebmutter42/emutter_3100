@@ -1,3 +1,34 @@
 javascript variables: let, var, const
 
 authentication, then test ( ~2 weeks ) (22nd?)
+
+Additional updates for this assignment.  I have cleared the database of all users and sessions so everything is fresh for your use.  Also, the /sessions.php endpoint has been updated to include three additional functions:
+ 
+When passed a GET request with the parameter sessionID, the webservice will return a JSON object with the session details.
+When passed a PUT request with the parameter sessionID, the webservice will return a JSON object with an Outcome or Error key.  This method updates the LastActivity field in the database
+When passed a DELETE request with the parameter sessionID, the webservice will return a JSON object with an Outcome or Error key.  This method deletes the passed session\
+
+
+
+Example PUT and DELETE AJAX requests:
+ 
+$.ajax({
+      type: "PUT",
+      contentType: "application/json; charset=utf-8",
+      url: "https://swollenhippo.com/ReliableVehicles/api/sessions.php",
+      data: { sessionID: "ac96b6a9-722b-4561-b0be-3977d0a98f24" },
+      success: function (result) {
+           console.log(result);
+      }
+ });
+ 
+ 
+$.ajax({
+      type: "DELETE",
+      contentType: "application/json; charset=utf-8",
+      url: "https://swollenhippo.com/ReliableVehicles/api/sessions.php",
+      data: { sessionID: "ac96b6a9-722b-4561-b0be-3977d0a98f24" },
+      success: function (result) {
+           console.log(result);
+      }
+ });
