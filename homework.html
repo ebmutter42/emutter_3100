@@ -1,0 +1,125 @@
+<!--
+    Emily Mutter
+    September 28, 2022
+    CSC-3100-001
+    Homework
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <script>
+        function addTwoNumbers(intOne, intTwo){
+            if(!intOne && !intTwo){
+                return 0;
+                if(intOne){
+                    if(intTwo){ //missing closing parentheses
+                        return intOne + intTwo;
+                    } else {
+                        return intOne;
+                    } //extra closing parentheses
+                }}
+            return intTwo;
+        }
+
+        // -----------------------------------------
+
+        $('#cboEmployeeType').change(function() {
+            if($('#cboEmployeeType').val() == 'FULL'){
+                //$('#divHours').slideUp();  //missing forward slash to make line a comment
+                //$('#divHours').css('display','none');
+                $('#divHours').addClass('d-none');
+            }else {
+                $('#divHours').removeClass('d-none'); //.slideDown would have a set of parentheses after it; .slideDown is not needed if you are removing d-none class already
+            }
+        })
+
+        // -----------------------------------------
+        var arrEmployees; //need to define arrEmployees
+        function buildEmployeeCard(){
+            $.each(arrEmployees,function(i,person){
+                if(person.FirstName != 'John'){
+                    let strHTML = ''; //should set equal to empty string so you don't get random data
+                    strHTML += '<div class="card col-6 offset-3 mt-5">';
+                    strHTML += '<h3 class="text-center"><a href="mailto:' + person.Email + '">' + person.FirstName + ' ' + person.LastName + '</a></h3>';
+                    strHTML += '<h4 class="text-center">' + person.Postion +'</h4>';
+                    strHTML += '<h4 class="mt-3">Profile Details</h4>';
+                    strHTML += '<p>Hourly Rate: ' + person.HourlyRate + '</p>';
+                    strHTML += '<p>Address:  586 Southern Lane, Cookeville, TN 38506</p>';
+                    strHTML += '<p>Assignment:  Clement Hall</p>';
+                    strHTML += '<div class="form-group">';
+                    strHTML += '<label for="txtPayRate">Pay Rate</label>';
+                    strHTML += '<input id="txtPayRate">';
+                    strHTML += '</div>';
+                    strHTML += '</div>';
+                    $('body').append(strHTML);
+                }
+            });
+        } //missing closing curly brace
+
+        // -----------------------------------------
+        
+        var arrEmployees;
+        $.getJSON("https://www.swollenhippo.com/getEmployeesByAPIKey.php?APIKey=Mickey2021!"), function(result){
+            console.log(result);
+            arremployees = result;
+            buildEmployeeCard();
+            $.each(result,function(i,person){
+                console.log(Person.FirstName);
+                console.log(person.FirstName + ' ' + person.LastName);
+                $('#txtEmail').val(person.Email);
+            }
+        )} //closing brace and closing parentheses were swapped
+
+        // -----------------------------------------
+
+        $(document).on('click','#btnHideWelcome',function(){
+            $('#divWelcome').slideToggle();
+            $('#divData').slideToggle(); //missing closing ) after divData and opening ( after slideToggle
+            $('#btnViews').slideToggle;
+        })
+
+        // -----------------------------------------
+
+        $(document).on('click','.btnCalculate',function(){
+            let decWage = $(this).closest('.card').find('.spanRate').text();
+            let decTax = $(this).closest('.card').find('.spanTax').text();
+            let decGoal = $(this).closest('card').find('.txtGoal').val();
+            let decTaxedWage = decWage * (1.00 - decTax); //missing closing )
+            let decHours = decGoal/decTaxedWage;
+            if(decHours > 40){
+                decGoal = decGoal - (40 * (decWage * (1.00 - decTax)));
+                decHours = decGoal/((decWage * (1.00 - decTax)*1.5));
+                decHours += 40;
+        
+            $(this).closest('.card').find('.spanHours').text(Math.round((decHours + Number.EPSILON) * 100) / 100);
+            } //missing closing curly brace for line 91
+        })
+
+        // -----------------------------------------
+
+        function buildEmployeeTableRow(Employee){
+            return '<tr><td>' + Employee.FirstName + '</td><td>' + Employee.LastName + '</td><td>' + Employee.Title + '</td><td>' + calculateTotalPay(Employee.HourlyWage,employee.Hours,Employee.TaxRate) + '</td></tr>'; //missing two single quotation marks
+        }
+
+        // -----------------------------------------
+
+        function calculateTotalPay(decPayRate, decHours, decTaxRate){
+            decOverTime = 0.00;
+            if(decHours > 40){ //missing closing )
+                decOvertime = dechours - 40;
+                decHours = 40;
+            }
+            return Math.round(((((decHours * decPayRate) + (decOverTime * decPayRate * 1.5)) * (1- decTaxRate)) + Number.EPSILON) * 100) / 100;
+        }
+    </script>
+</body>
+</html>
