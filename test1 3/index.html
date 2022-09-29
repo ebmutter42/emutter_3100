@@ -8,7 +8,7 @@
     <!-- Add your CSS references here, remember last one in rules-->
     <link href="css/lib/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="vh-100">
+<body class="vh-100 bg-primary d-flex">
     <div class="">
         <div id="divCreateUser" style="display:none;" class="col-12 row">
             <div class="d-none d-md-block col-6  d-flex justify-content-center align-items-center vh-100 bg-white">
@@ -26,23 +26,23 @@
                         <form>
                             <div class="form-group">
                                 <label for="txtCreateFirstName" class="form-label mt-4">First Name</label>
-                                <input class="form-control" id="txtCreateFirstName" placeholder="">
+                                <input class="form-control" type="text" id="txtCreateFirstName" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label for="txtCreateLastName" class="form-label mt-4">Last Name</label>
-                                <input class="form-control" id="txtCreateLastName" placeholder="">
+                                <input class="form-control" type="text" id="txtCreateLastName" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label for="txtCreateEmail" class="form-label mt-4">Email</label>
-                                <input class="form-control" id="txtCreateEmail" placeholder="">
+                                <input class="form-control" type="email" id="txtCreateEmail" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label for="txtCreateClass" class="form-label mt-4">Class</label>
-                                <input class="form-control" id="txtCreateClass" placeholder="">
+                                <input class="form-control" type="text" id="txtCreateClass" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label for="txtCreatePassword" class="form-label mt-4">Password</label>
-                                <input class="form-control" id="txtCreatePassword" placeholder="">
+                                <input class="form-control" type="password" id="txtCreatePassword" placeholder="">
                             </div>
                             <button class="btn btn-primary col-12 mt-4" type="button" id="btnRegister">Register Account</button>
                             <button class="btn btn-secondary col-12 mt-2 btnSwap" type="button">Back To Login</button>
@@ -59,8 +59,8 @@
                     </div>
                     <div class="card-body">
                         <form>
-                            <input id="txtLoginEmail" class="form-control">
-                            <input id="txtLoginPassword" class="form-control mt-2">
+                            <input id="txtLoginEmail" type="email" class="form-control" placeholder="johndoe@email.com" aria-label="Enter Email">
+                            <input id="txtLoginPassword" type="password" class="form-control mt-2" placeholder="password" aria-label="Enter Password">
                             <button class="btn btn-primary col-12 mt-4" type="button" id="btnLogin">Login</button>
                             <button class="btn btn-secondary col-12 mt-2 btnSwap" type="button">Create Account</button>
                         </form>
@@ -112,17 +112,95 @@
     <script src="js/lib/bootstrap.bundle.min.js"></script>    
     <script src="js/lib/sweetalert2@11.js"></script>
     <script>
+        //. for classes, # for ids
+        var strBaseURL = 'https://simplefarm.thesimplehomestead.com/api/';
+
         // REMEMBER, Javascript runs TOP to BOTTOM, the first thing within this <script> tag will run on initial load to the page
         $('.btnSwap').on('click',function(){
             // Use this click handler to toggle the view of the user registration and login <div> elements
+            $('#divCreateUser').slideToggle();
+            $('#divLogin').slideToggle();
         })
 
         $('#btnRegister').on('click',function(){
             // Use this click handler to a new user in the application
+            let blnError = false;
+            let strErrorMessage = '';
+
+            if($('#txtCreateFirstName').val().length < 1){
+                blnError = true;
+                strErrorMessage += '<p>You must enter a first name</p>';
+            }
+            if($('#txtCreateLastName').val().length < 1){
+                blnError = true;
+                strErrorMessage += '<p>You must enter a last name</p>';
+            }
+            if($('#txtCreateEmail').val().length < 1){
+                blnError = true;
+                strErrorMessage += '<p>You must enter an email</p>';
+            }
+            if($('#txtCreateClass').val().length < 1){
+                blnError = true;
+                strErrorMessage += '<p>You must enter a class</p>';
+            } else if($('#txtCreateClass').val() != 'CSC3100'){
+                blnError = true;
+                strErrorMessage += '<p>You must enter CSC3100 as class</p>';
+            }
+            if($('#txtCreatePassword').val().length < 1){
+                blnError = true;
+                strErrorMessage += '<p>You must enter a password</p>';
+            }
+
+            if(blnError == true){
+                Swal.fire({
+                    icon: 'error',
+                    html: strErrorMessage
+                })
+            } else {
+                $.post(strBaseURL + 'users.php', {Email: $('#txtCreateEmail').val(), FirstName:$('#txtCreateFirstName').val(), LastName:$('#txtCreateLastName').val(), Class:$('#txtCreateClass').val(), Password:$('#txtCreatePassword').val()})
+                .done(function(result){
+                    let objResult = JSON.parse(result);
+                    if(objResult.Outcome){
+                        $.post(strBaseURL + 'sessions.php', {Email: $('#txtCreateEmail').val(), Password:$('#txtCreatePassword').val()})
+                        .done(function(session){
+                            let objSession = JSON.parse(session);
+                            if(objSession.SessionID){
+                                sessionStorage.setItem('SimpleSession', objSession.SessionID);
+                                $('#divCreateUser').slideToggle();
+                                $('#divAnimalDashboard').slideToggle();
+                            } else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    html: '<p>Creating session failed</p>'
+                                })
+                            }
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            html: '<p>Creating user failed</p>'
+                        })
+                    }
+                })
+            }
         })
 
         $('#btnLogin').on('click',function(){
             // Use this click handler to log a user into the application
+            $.post(strBaseURL + 'sessions.php', {Email: $('#txtLoginEmail').val(), Password:$('#txtLoginPassword').val()})
+                        .done(function(session){
+                            let objSession = JSON.parse(session);
+                            if(objSession.SessionID){
+                                sessionStorage.setItem('SimpleSession', objSession.SessionID);
+                                $('#divLogin').slideToggle();
+                                $('#divAnimalDashboard').slideToggle();
+                            } else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    html: '<p>Creating session failed</p>'
+                                })
+                            }
+                        }
         })
 
         $('#btnLogout').on('click',function(){
