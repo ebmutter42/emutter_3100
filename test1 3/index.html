@@ -188,19 +188,19 @@
         $('#btnLogin').on('click',function(){
             // Use this click handler to log a user into the application
             $.post(strBaseURL + 'sessions.php', {Email: $('#txtLoginEmail').val(), Password:$('#txtLoginPassword').val()})
-                        .done(function(session){
-                            let objSession = JSON.parse(session);
-                            if(objSession.SessionID){
-                                sessionStorage.setItem('SimpleSession', objSession.SessionID);
-                                $('#divLogin').slideToggle();
-                                $('#divAnimalDashboard').slideToggle();
-                            } else{
-                                Swal.fire({
-                                    icon: 'error',
-                                    html: '<p>Creating session failed</p>'
-                                })
-                            }
-                        }
+            .done(function(session){
+                let objSession = JSON.parse(session);
+                if(objSession.SessionID){
+                    sessionStorage.setItem('SimpleSession', objSession.SessionID);
+                    $('#divLogin').slideToggle();
+                    $('#divAnimalDashboard').slideToggle();
+                } else{
+                    Swal.fire({
+                        icon: 'error',
+                        html: '<p>Creating session failed</p>'
+                    })
+                }
+            }
         })
 
         $('#btnLogout').on('click',function(){
