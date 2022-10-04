@@ -89,7 +89,14 @@
                             <div class="form-group">
                                 <label for="selectAnimal" class="form-label mt-4">Animal Type</label>
                                 <select class="form-control" id="selectAnimal">
+                                    <option value=""></option>
+                                    <option value="Pig">Pig</option>
+                                    <option value="Dog">Dog</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtVariableSearch" class="form-label mt-4">Search Value</label>
+                                <input class="form-control" type="text" id="txtVariableSearch" placeholder="">
                             </div>
                             <button class="btn btn-primary mt-2" id="btnSearch">Find</button>
                         </form>
@@ -112,6 +119,15 @@
     <script src="js/lib/bootstrap.bundle.min.js"></script>    
     <script src="js/lib/sweetalert2@11.js"></script>
     <script>
+        if(sessionStorage.getItem('SimpleSession')){
+            $.getJSON('', {}, function(){
+                if(session){
+                    $('#divLogin').slideToggle();
+                    $('#divAnimalDashboard').slideToggle();
+                }
+            })
+        }
+
         //. for classes, # for ids
         var strBaseURL = 'https://simplefarm.thesimplehomestead.com/api/';
 
@@ -158,30 +174,30 @@
                 })
             } else {
                 $.post(strBaseURL + 'users.php', {Email: $('#txtCreateEmail').val(), FirstName:$('#txtCreateFirstName').val(), LastName:$('#txtCreateLastName').val(), Class:$('#txtCreateClass').val(), Password:$('#txtCreatePassword').val()})
-                .done(function(result){
-                    let objResult = JSON.parse(result);
-                    if(objResult.Outcome){
-                        $.post(strBaseURL + 'sessions.php', {Email: $('#txtCreateEmail').val(), Password:$('#txtCreatePassword').val()})
-                        .done(function(session){
-                            let objSession = JSON.parse(session);
-                            if(objSession.SessionID){
-                                sessionStorage.setItem('SimpleSession', objSession.SessionID);
-                                $('#divCreateUser').slideToggle();
-                                $('#divAnimalDashboard').slideToggle();
-                            } else{
-                                Swal.fire({
-                                    icon: 'error',
-                                    html: '<p>Creating session failed</p>'
-                                })
-                            }
+                    .done(function(result){
+                        let objResult = JSON.parse(result);
+                        if(objResult.Outcome){
+                            $.post(strBaseURL + 'sessions.php', {Email: $('#txtCreateEmail').val(), Password:$('#txtCreatePassword').val()})
+                            .done(function(session){
+                                let objSession = JSON.parse(session);
+                                if(objSession.SessionID){
+                                    sessionStorage.setItem('SimpleSession', objSession.SessionID);
+                                    $('#divCreateUser').slideToggle();
+                                    $('#divAnimalDashboard').slideToggle();
+                                } else{
+                                    Swal.fire({
+                                        icon: 'error',
+                                        html: '<p>Creating session failed</p>'
+                                    })
+                                }
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                html: '<p>Creating user failed</p>'
+                            })
                         }
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            html: '<p>Creating user failed</p>'
-                        })
-                    }
-                })
+                    })
             }
         })
 
@@ -200,19 +216,22 @@
                         html: '<p>Creating session failed</p>'
                     })
                 }
-            }
+            })
         })
 
         $('#btnLogout').on('click',function(){
             // Use this click handler to log a user out from the application
-            let strSessionID = ; // set the value of this variable to the value of your SimpleSession that you have stored
+            let strSessionID = sessionStorage.getItem('SimpleSession'); // set the value of this variable to the value of your SimpleSession that you have stored
             $.ajax({
-                type: "ENTER_YOUR_APPROPRIATE_HTTP_METHOD_HERE",
-                contentType:"applicaiton/json; charset=utf-8",
+                type: "DELETE",
+                contentType:"application/json; charset=utf-8",
                 url: "https://simplefarm.thesimplehomestead.com/api/sessions.php",
                 data: { SessionID:strSession },
                 success:function(result){
                     // Complete your logout
+                    sessionStorage.removeItem('SimpleSession');
+                    $('#divAnimalDashboard').slideToggle();
+                    $('#divLogin').slideToggle();
                 },
                 error: function(resultError){
                     // Handle any errors here
@@ -225,13 +244,53 @@
             let strErrorMessage = '';
             let strAnimalType; // Use this variable to set the value of your animal type based on the logic provided in the instructions
             // Validate input here
+            selectAnimal
+            txtVariableSelect
+            if($('#selectAnimal').val().length < 1 && $('#txtVariableSearch').val().length < 1){
+                blnError = true;
+                strErrorMessage += '<p>You must either select an animal from the list or enter your own</p>';
+            }
 
             if(blnError == false){
-                let strSessionID = ; // set the value of this variable to the value of your SimpleSession that you have stored
-                $.getJSON('https://simplefarm.thesimplehomestead.com/api/animals.php',{SessionID:strSessionID,AnimalType:strAnimalType},function(animals){
-                    // Clear the tbody
+                let strSessionID = sessionStorage.getItem('SimpleSession'); // set the value of this variable to the value of your SimpleSession that you have stored
+                strAnimalType = '';
+                if($('#selectAnimal').val().length > 0){
+                    strAnimalType = $('#selectAnimal').val();
+                } else {
+                    strAnimalType = $('#txtVariableSearch').val();
+                }
 
+                $.getJSON('https://simplefarm.thesimplehomestead.com/api/animals.php',{SessionID:strSessionID,AnimalType:strAnimalType},function(animals){
+                    $.ajax({
+                        type: "PUT",
+                        contentType:"application/json; charset=utf-8",
+                        url: "https://simplefarm.thesimplehomestead.com/api/sessions.php",
+                        data: { SessionID:strSessionID },
+                        success:function(result){
+                            // Complete your logout
+                        },
+                        error: function(resultError){
+                            // Handle any errors here
+                        }
+                    })
+                    if(animals == '' || animals == null){
+                        Swal.fire({
+                            type: "error",
+                            html: "<p>No Animals of This Type Found</p>"
+                        })
+                    }
+                    // Clear the tbody
+                    $('#tblAnimals tbody').empty();
                     // Iterate across your returned array and build the rows for the table;  add the rows to the table
+                    $.each(animals, function(index, animal){
+                        let strRow = '';
+                        strRow += '<tr>';
+                        strRow += '<td>' + animal.AnimalID + '</td>';
+                        strRow += '<td>' + animal.Name + '</td>';
+                        strRow += '<td>' + animal.Type + '</td>';
+                        strRow += '</tr>';
+                        $('#tblAnimals tbody').append(strRow);
+                    })
                 })
             } else {
                 Swal.fire({
