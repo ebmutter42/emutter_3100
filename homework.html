@@ -20,13 +20,14 @@
         function addTwoNumbers(intOne, intTwo){
             if(!intOne && !intTwo){
                 return 0;
-                if(intOne){
-                    if(intTwo){ //missing closing parentheses
-                        return intOne + intTwo;
-                    } else {
-                        return intOne;
-                    } //extra closing parentheses
-                }}
+            }//needs closing tag 1
+            if(intOne){
+                if(intTwo){ //missing closing parentheses
+                    return intOne + intTwo;
+                } else {
+                    return intOne;
+                } //extra closing parentheses
+            }//extra bracket 2
             return intTwo;
         }
 
@@ -34,11 +35,11 @@
 
         $('#cboEmployeeType').change(function() {
             if($('#cboEmployeeType').val() == 'FULL'){
-                //$('#divHours').slideUp();  //missing forward slash to make line a comment
+                $('#divHours').slideUp();  //missing forward slash to make line a comment, remove slash to uncomment 3
                 //$('#divHours').css('display','none');
                 $('#divHours').addClass('d-none');
             }else {
-                $('#divHours').removeClass('d-none'); //.slideDown would have a set of parentheses after it; .slideDown is not needed if you are removing d-none class already
+                $('#divHours').removeClass('d-none').slideDown(); //.slideDown would have a set of parentheses after it 4
             }
         })
 
@@ -68,16 +69,16 @@
         // -----------------------------------------
         
         var arrEmployees;
-        $.getJSON("https://www.swollenhippo.com/getEmployeesByAPIKey.php?APIKey=Mickey2021!"), function(result){
+        $.getJSON("https://www.swollenhippo.com/getEmployeesByAPIKey.php", {APIKey: 'Mickey2021!'}, function(result){ //extra closing parentheses, API Key curly brace thing 5,6
             console.log(result);
-            arremployees = result;
+            arrEmployees = result; //arrEmployees not camel-cased 7
             buildEmployeeCard();
             $.each(result,function(i,person){
-                console.log(Person.FirstName);
+                console.log(person.FirstName); //person was capitalized 8
                 console.log(person.FirstName + ' ' + person.LastName);
                 $('#txtEmail').val(person.Email);
-            }
-        )} //closing brace and closing parentheses were swapped
+            }) //missing closing parentheses 9
+        })        
 
         // -----------------------------------------
 
@@ -92,22 +93,22 @@
         $(document).on('click','.btnCalculate',function(){
             let decWage = $(this).closest('.card').find('.spanRate').text();
             let decTax = $(this).closest('.card').find('.spanTax').text();
-            let decGoal = $(this).closest('card').find('.txtGoal').val();
+            let decGoal = $(this).closest('.card').find('.txtGoal').val(); //dot before card 10
             let decTaxedWage = decWage * (1.00 - decTax); //missing closing )
             let decHours = decGoal/decTaxedWage;
             if(decHours > 40){
                 decGoal = decGoal - (40 * (decWage * (1.00 - decTax)));
                 decHours = decGoal/((decWage * (1.00 - decTax)*1.5));
                 decHours += 40;
-        
-            $(this).closest('.card').find('.spanHours').text(Math.round((decHours + Number.EPSILON) * 100) / 100);
             } //missing closing curly brace for line 91
+            $(this).closest('.card').find('.spanHours').text(Math.round((decHours + Number.EPSILON) * 100) / 100);
+            
         })
 
         // -----------------------------------------
 
         function buildEmployeeTableRow(Employee){
-            return '<tr><td>' + Employee.FirstName + '</td><td>' + Employee.LastName + '</td><td>' + Employee.Title + '</td><td>' + calculateTotalPay(Employee.HourlyWage,employee.Hours,Employee.TaxRate) + '</td></tr>'; //missing two single quotation marks
+            return '<tr><td>' + Employee.FirstName + '</td><td>' + Employee.LastName + '</td><td>' + Employee.Title + '</td><td>' + calculateTotalPay(Employee.HourlyWage,Employee.Hours,Employee.TaxRate) + '</td></tr>'; //missing two single quotation marks; employee should be capitalized 11
         }
 
         // -----------------------------------------
@@ -115,7 +116,7 @@
         function calculateTotalPay(decPayRate, decHours, decTaxRate){
             decOverTime = 0.00;
             if(decHours > 40){ //missing closing )
-                decOvertime = dechours - 40;
+                decOverTime = decHours - 40; //camel-case 12
                 decHours = 40;
             }
             return Math.round(((((decHours * decPayRate) + (decOverTime * decPayRate * 1.5)) * (1- decTaxRate)) + Number.EPSILON) * 100) / 100;
