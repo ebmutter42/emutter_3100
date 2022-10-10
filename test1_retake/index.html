@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SimpleFarm</title>
     <!-- Add your CSS references here, remember last one in rules-->
+    <link href="css/lib/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="vh-100">
+<body class="vh-100 bg-primary d-flex">
     <div class="">
         <div id="divCreateUser" style="display:none;" class="col-12 row">
             <div class="d-none d-md-block col-6  d-flex justify-content-center align-items-center vh-100 bg-white">
@@ -25,23 +26,23 @@
                         <form>
                             <div class="form-group">
                                 <label for="txtCreateFirstName" class="form-label mt-4">First Name</label>
-                                <input class="form-control" id="txtCreateFirstName" placeholder="">
+                                <input class="form-control" id="txtCreateFirstName" placeholder="" type="text">
                             </div>
                             <div class="form-group">
                                 <label for="txtCreateLastName" class="form-label mt-4">Last Name</label>
-                                <input class="form-control" id="txtCreateLastName" placeholder="">
+                                <input class="form-control" id="txtCreateLastName" placeholder="" type="text">
                             </div>
                             <div class="form-group">
                                 <label for="txtCreateEmail" class="form-label mt-4">Email</label>
-                                <input class="form-control" id="txtCreateEmail" placeholder="">
+                                <input class="form-control" id="txtCreateEmail" placeholder="" type="email">
                             </div>
                             <div class="form-group">
                                 <label for="txtCreateClass" class="form-label mt-4">Class</label>
-                                <input class="form-control" id="txtCreateClass" placeholder="">
+                                <input class="form-control" id="txtCreateClass" placeholder="" type="text">
                             </div>
                             <div class="form-group">
                                 <label for="txtCreatePassword" class="form-label mt-4">Password</label>
-                                <input class="form-control" id="txtCreatePassword" placeholder="">
+                                <input class="form-control" id="txtCreatePassword" placeholder="" type="password">
                             </div>
                             <button class="btn btn-primary col-12 mt-4" type="button" id="btnRegister">Register Account</button>
                             <button class="btn btn-secondary col-12 mt-2 btnSwap" type="button">Back To Login</button>
@@ -58,8 +59,8 @@
                     </div>
                     <div class="card-body">
                         <form>
-                            <input id="txtLoginEmail" class="form-control">
-                            <input id="txtLoginPassword" class="form-control mt-2">
+                            <input id="txtLoginEmail" class="form-control" type="email" placeholder="johndoe@email.com" aria-label="Enter Email">
+                            <input id="txtLoginPassword" class="form-control mt-2" type="password" placeholder="password" aria-label="Enter Password">
                             <button class="btn btn-primary col-12 mt-4" type="button" id="btnLogin">Login</button>
                             <button class="btn btn-secondary col-12 mt-2 btnSwap" type="button">Create Account</button>
                         </form>
@@ -88,7 +89,15 @@
                             <div class="form-group">
                                 <label for="selectAnimal" class="form-label mt-4">Animal Type</label>
                                 <select class="form-control" id="selectAnimal">
+                                    <option value=" "> </option>
+                                    <option value="Pig">Pig</option>
+                                    <option value="Dog">Dog</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtAnimalSearch" class="form-label mt-4">Animal Type Search</label>
+                                <input class="form-control" id="txtAnimalSearch" placeholder="Animal Type" type="text">
+
                             </div>
                             <button class="btn btn-primary mt-2" id="btnSearch">Find</button>
                         </form>
@@ -107,30 +116,159 @@
         </div>
     </div>
     <!-- Add the references to your javascript files here.  Remember that these run from TOP to BOTTOM.-->
+    <script src="js/lib/bootstrap.bundle.min.js"></script>
+    <script src="js/lib/sweetalert2@11.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
     <script>
+
+        if(sessionStorage.getItem('SimpleSession')){
+            let strSessionID = sessionStorage.getItem('SimpleSession');
+            $.getJSON('https://simplefarm.thesimplehomestead.com/api/sessions.php', {SessionID:strSessionID}, function(session){
+                if(session){
+                    $('#divLogin').slideToggle();
+                    $('#divAnimalDashboard').slideToggle();
+                } else {
+                    sessionStorage.removeItem('SimpleSession');
+                }
+            })
+        }
+
         // REMEMBER, Javascript runs TOP to BOTTOM, the first thing within this <script> tag will run on initial load to the page
         $('.btnSwap').on('click',function(){
             // Use this click handler to toggle the view of the user registration and login <div> elements
+            $('#divCreateUser').slideToggle();
+            $('#divLogin').slideToggle();
         })
 
         $('#btnRegister').on('click',function(){
             // Use this click handler to a new user in the application
+            let strFirstName = $('#txtCreateFirstName').val();
+            let strLastName = $('#txtCreateLastName').val();
+            let strEmail = $('#txtCreateEmail').val();
+            let strClass = $('#txtCreateClass').val();
+            let strPassword = $('#txtCreatePassword').val();
+            let blnError = false;
+            let strErrorMessage = '';
+
+            if(!($('#strFirstName'))){
+                blnError = true;
+                strErrorMessage += "<p>Enter a First Name</p>";
+            }
+            if(!($('#strLastName'))){
+                blnError = true;
+                strErrorMessage += "<p>Enter a Last Name</p>";
+            }
+            if(!($('#strEmail'))){
+                blnError = true;
+                strErrorMessage += "<p>Enter an Email</p>";
+            }
+            if(!($('#strClass'))){
+                blnError = true;
+                strErrorMessage += "<p>Enter a Class</p>";
+            }
+            if($('#strClass').val() != 'CSC3100'){
+                blnError = true;
+                strErrorMessage += "<p>Class Must Be CSC3100</p>";
+            }
+            if(!($('#strPassword'))){
+                blnError = true;
+                strErrorMessage += "<p>Enter a Password</p>";
+            }
+
+            if(blnError == true){
+                Swal.fire({
+                    icon: 'error',
+                    html: strErrorMessage
+                    })
+            }
+            $.post('https://simplefarm.thesimplehomestead.com/api/users.php', {Email:strEmail, FirstName:strFirstName, LastName:strLastName, Password:strPassword, Class: strClass}).done(function(result){
+                const objResult = JSON.parse(result);
+
+                if(!objResult.Outcome){
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Uh Oh...',
+                    text: obj.Error
+                    })
+                }
+                Swal.fire({
+                icon: 'success',
+                title: objResult.Outcome,
+                })
+                $.post('https://simplefarm.thesimplehomestead.com/api/sessions.php', {Email:strEmail, Password:strPassword}).done(function(session){
+                    const objSession = JSON.parse(session);
+
+                    if(objSession.SessionID){
+                        sessionStorage.setItem("SimpleSession", objSession.SessionID)
+                        $('#divCreateUser').slideToggle();
+                        $('#divAnimalDashboard').slideToggle();
+                    } else {
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Oh No',
+                        text: 'Error Creating Session'
+                        })
+                    }
+
+                })
+                
+
+            })
+
         })
 
         $('#btnLogin').on('click',function(){
             // Use this click handler to log a user into the application
+            let strEmail = $('#txtLoginEmail').val();
+            let strPassword = $('#txtLoginPassword').val();
+
+            let blnError = false;
+            let strErrorMessage = '';
+            if(!strEmail){
+                blnError = true;
+                strErrorMessage += '<p>Email cannot be blank</p>';
+            }
+            if(!strPassword){
+                blnError = true;
+                strErrorMessage += '<p>Password cannot be blank</p>';
+            }
+
+            if(blnError == false){
+                
+                $.post('https://simplefarm.thesimplehomestead.com/api/sessions.php', {email:strEmail, password:strPassword}).done(function(session){
+                
+                const objSession = JSON.parse(session);
+
+                if(objSession.SessionID){
+                    sessionStorage.setItem("SimpleSession", objSession.SessionID)
+                    $('#divLogin').slideToggle();
+                    $('#divAnimalDashboard').slideToggle();
+                } else {
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Oh No',
+                    text: 'Username or Password Incorrect'
+                    })
+                }
+                })
+            }
+
         })
 
         $('#btnLogout').on('click',function(){
             // Use this click handler to log a user out from the application
-            let strSessionID = ; // set the value of this variable to the value of your SimpleSession that you have stored
+            let strSessionID = sessionStorage.getItem('SimpleSession'); // set the value of this variable to the value of your SimpleSession that you have stored
             $.ajax({
-                type: "ENTER_YOUR_APPROPRIATE_HTTP_METHOD_HERE",
+                type: "DELETE",
                 contentType:"applicaiton/json; charset=utf-8",
                 url: "https://simplefarm.thesimplehomestead.com/api/sessions.php",
                 data: { SessionID:strSession },
                 success:function(result){
                     // Complete your logout
+                    sessionStorage.removeItem('SimpleSession');
+                    $('#divAnimalDashboard').slideToggle();
+                    $('#divLogin').slideToggle();
                 },
                 error: function(resultError){
                     // Handle any errors here
@@ -144,12 +282,49 @@
             let strAnimalType; // Use this variable to set the value of your animal type based on the logic provided in the instructions
             // Validate input here
 
+            if($('#selectAnimal').val().length() < 1 && $('#txtVariableSearch').val() < 1){
+                blnError = true;
+                strErrorMessage += "<p>You must either select an animal or enter the name of one</p>";
+            }
+
             if(blnError == false){
-                let strSessionID = ; // set the value of this variable to the value of your SimpleSession that you have stored
+                let strSessionID = sessionStorage.getItem('SimpleSession'); // set the value of this variable to the value of your SimpleSession that you have stored
+                strAnimalType = '';
+                if($('#selectAnimal').val().length() > 0){
+                    strAnimalType = $('#selectAnimal').val();
+                } else {
+                    strAnimalType = $('#txtVariableSearch').val();
+                }
+
                 $.getJSON('https://simplefarm.thesimplehomestead.com/api/animals.php',{SessionID:strSessionID,AnimalType:strAnimalType},function(animals){
+                    $.ajax({
+                        type: "PUT",
+                        contentType:"applicaiton/json; charset=utf-8",
+                        url: "https://simplefarm.thesimplehomestead.com/api/sessions.php",
+                        data: { SessionID:strSession },
+                        success:function(result){
+                            // Complete your logout
+                        },
+                        error: function(resultError){
+                            // Handle any errors here
+                        }
+                    })
+                    if(animals == '' || animals == null){
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Oh No',
+                        text: 'No Data on This Animal'
+                        })
+                    }
                     // Clear the tbody
+                    $('#tblAnimals tbody').empty();
 
                     // Iterate across your returned array and build the rows for the table;  add the rows to the table
+                    $.each(animals, function(index,animal){
+                        let strTableRow = '<tr><td>' + animal.AnimalID + '</td><td>' + animal.Name + '</td><td>' + animal.Type + '</td></tr>';
+                        $('#tblAnimals tbody').append(strTableRow);
+
+                    })
                 })
             } else {
                 Swal.fire({
