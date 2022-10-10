@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Selector</title>
+    <link href="css/lib/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div id="divAnimalDashboard" class="col-12">
+        <div class="col-12 d-flex justify-content-center align-items-center vh-100">
+            <div class="card col-12 col-md-10 offset-md-1">
+                <div class="card-head">
+                    <div class="d-flex col-12 justify-content-between">
+                        <h3>Animal Finder</h3>
+                        <button id="" class="btn btn-danger" id="btnLogout">Logout</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="txtDeptSearch" class="form-label mt-4">Search Department</label>
+                            <input class="form-control" type="text" id="txtDeptSearch" placeholder="Department">
+                            <label for="txtCourseSearch" class="form-label mt-4">Search Course</label>
+                            <input class="form-control" type="text" id="txtCourseSearch" placeholder="Course">
+                            <label for="txtSectionSearch" class="form-label mt-4">Search Section</label>
+                            <input class="form-control" type="text" id="txtSectionSearch" placeholder="Section">
+                            <label for="txtCreditsSearch" class="form-label mt-4">Search Credits</label>
+                            <input class="form-control" type="text" id="txtCreditsSearch" placeholder="Credits">
+                            <label for="txtStartTimeSearch" class="form-label mt-4">Search Start Time</label>
+                            <input class="form-control" type="text" id="txtStartTimeSearch" placeholder="Start Time">
+                            <label for="txtBuildingSearch" class="form-label mt-4">Search Building</label>
+                            <input class="form-control" type="text" id="txtBuildingSearch" placeholder="Building">
+                        </div>
+                        <button class="btn btn-primary mt-2" id="btnSearch">Find</button>
+                    </form>
+                    <hr>
+                    <table id="tblAnimals" class="table mt-5">
+                        <thead>
+                            <tr><th>Building</th><th>Class Days</th><th>Course</th><th>Credits</th><th>CRN</th><th>Department</th><th>End Am or PM</th><th>End Time</th><th>Is Location Determined</th><th>Is Online</th><th>Is Open</th><th>Is Time Determined</th><th>Max Students</th><th>Professor</th><th>Room</th><th>Section</th><th>Start am or Pm</th><th>Start Time</th><th>student count</th><th>title</th></tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="js/lib/bootstrap.bundle.min.js"></script>
+    <script src="js/lib/sweetalert2@11.js"></script>
+    <script>
+        //$.getJSON('https://portapi.tntech.edu/express/api/unprotected/getCourseInfoByAPIKey.php',{Key:'5B2FB0FC-79F6-47FF-839D-DA910DD9D17D',Term:'202280'})
+        let portApiUrl = 'https://portapi.tntech.edu/express/api/unprotected/';
+
+        $('#btnSearch').on('click',function(){
+            let txtDepartment = ($('#txtDeptSearch').val()).toUpperCase();
+            let txtCourse = ($('#txtCourseSearch').val()).toUpperCase();
+            let txtSection = ($('#txtSectionSearch').val()).toUpperCase();
+            let txtCredits = ($('#txtCreditsSearch').val()).toUpperCase();
+            let txtStartTime = ($('#txtStartTimeSearch').val()).toUpperCase();
+            let txtBuilding = ($('#txtBuildingSearch').val()).toUpperCase();
+            let blnError = false;
+            let strErrorMessage = '';
+            
+            if(!$('#txtDepartment')){
+
+            }
+
+
+
+
+        })
+
+
+
+    </script>
+    
+</body>
+</html>
