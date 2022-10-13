@@ -1,0 +1,176 @@
+
+
+<!--//filter
+//input
+//query
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Selector</title>
+    <link href="css/lib/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="vh-100 bg-primary d-flex">
+
+    <div id="divClassDashboard" class="col-12 mt-5">
+        <div class="col-12 d-flex justify-content-center align-items-center">
+            <div class="card col-12 col-md-10 offset-md-1">
+                <div class="card-head">
+                    <div class="d-flex col-12 justify-content-between">
+                        <h3>Class Finder</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="txtTermSearch" class="form-label mt-4">Search Term</label>
+                            <input class="form-control" type="text" id="txtTermSearch" placeholder="Term" required>
+                            <label for="txtSubjectSearch" class="form-label mt-4">Search Subject</label>
+                            <input class="form-control" type="text" id="txtSubjectSearch" placeholder="Subject">
+                            <label for="txtMinCapSearch" class="form-label mt-4">Search MinCap</label>
+                            <input class="form-control" type="text" id="txtMinCapSearch" placeholder="MinCap">
+                            <label for="txtBuildingSearch" class="form-label mt-4">Search Building</label>
+                            <input class="form-control" type="text" id="txtBuildingSearch" placeholder="Building">
+                            <label for="txtRoomSearch" class="form-label mt-4">Search Room</label>
+                            <input class="form-control" type="text" id="txtRoomSearch" placeholder="Room">
+                            <label for="txtCourseSearch" class="form-label mt-4">Search Course</label>
+                            <input class="form-control" type="text" id="txtCourseSearch" placeholder="Course">
+                            <label for="txtSectionSearch" class="form-label mt-4">Search Section</label>
+                            <input class="form-control" type="text" id="txtSectionSearch" placeholder="Section">
+                        </div>
+                        <button class="btn btn-primary mt-2" id="btnSearch" type="button">Find</button>
+                        <button class="btn btn-primary mt-2" id="btnClear" type="button">Clear</button>
+
+                    </form>
+                    <hr>
+                    <table id="tblClasses" class="table mt-5">
+                        <thead>
+                            <tr><th>Building</th><th>Class Days</th><th>Course</th><th>Credits</th><th>CRN</th><th>Department</th><th>End Am or PM</th><th>End Time</th><th>Is Location Determined</th><th>Is Online</th><th>Is Open</th><th>Is Time Determined</th><th>Max Students</th><th>Professor</th><th>Room</th><th>Section</th><th>Start am or Pm</th><th>Start Time</th><th>student count</th><th>title</th></tr>
+                            <button class="btn btn-primary mt-2" id="btnDetails" type="button">Show Details</button>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="js/lib/bootstrap.bundle.min.js"></script>
+    <script src="js/lib/sweetalert2@11.js"></script>
+    <script>
+        //$.getJSON('https://portapi.tntech.edu/express/api/unprotected/getCourseInfoByAPIKey.php',{Key:'5B2FB0FC-79F6-47FF-839D-DA910DD9D17D',Term:'202280'})
+        let strURL = "https://portapi.tntech.edu/express/api/unprotected/getCourseInfoByAPIKey.php?Key=5B2FB0FC-79F6-47FF-839D-DA910DD9D17D";
+        let portApiUrl = 'https://portapi.tntech.edu/express/api/unprotected/';
+
+        $('#btnSearch').on('click',function(){
+            let Term = ($('#txtTermSearch').val());
+            let Department = $('#txtSubjectSearch').val();
+            let MinCap = ($('#txtMinCapSearch').val());
+            let Building = ($('#txtBuildingSearch').val());
+            let Room = ($('#txtRoomSearch').val());
+            let Course = ($('#txtCourseSearch').val());
+            let Section = ($('#txtSectionSearch').val());
+            let strErrorMessage = '';
+            let blnError = false;
+            console.log('Test');
+
+            
+            
+            if(Term != ''){
+                console.log('Term if Statement procd')
+                strURL += "&Term=" + Term;
+            } else {
+                blnError = true;
+                strErrorMessage += "You must include a term in your search.\n"
+            }
+            if(Department != ''){
+                console.log('If Statement procd')
+                strURL += "&Subject=" + Department.toUpperCase();
+                
+            }
+            if(MinCap != ''){
+                strURL += "&MinCap=" + MinCap;
+
+                
+            }
+            if(Building != ''){
+                strURL += "&Building=" + Building.toUpperCase();
+
+            }if(Room != ''){
+                strURL += "&Room=" + Room;
+
+                
+            }if(Course != ''){
+                strURL += "&Course=" + Course;
+
+                
+            }if(Section != ''){
+                strURL += "&Section=" + Section;
+                
+            }
+
+
+
+            if(blnError == true){
+                Swal.fire({
+                        icon: 'error',
+                        title: 'Oh No',
+                        text: strErrorMessage
+                        })
+            }
+            else {
+                $.getJSON(strURL,function(courses){
+                    $.each(courses, function(index,course){
+                        let strRow = '';
+                        strRow += '<tr>';
+                        strRow += '<td>' + course.BUILDING + '</td>';
+                        strRow += '<td>' + course.CLASSDAYS + '</td>';
+                        strRow += '<td>' + course.COURSE + '</td>';
+                        strRow += '<td>' + course.CREDITS + '</td>';
+                        strRow += '<td>' + course.CRN + '</td>';
+                        strRow += '<td>' + course.DEPARTMENT + '</td>';
+                        strRow += '<td>' + course.ENDAM_PM + '</td>';
+                        strRow += '<td>' + course.ENDTIME + '</td>';
+                        strRow += '<td>' + course.ISLOCDETERMINED + '</td>';
+                        strRow += '<td>' + course.ISONLINE + '</td>';
+                        strRow += '<td>' + course.ISOPEN + '</td>';
+                        strRow += '<td>' + course.ISTIMEDETERMINED + '</td>';
+                        strRow += '<td>' + course.MAXIMUMSTUDENTS + '</td>';
+                        strRow += '<td>' + course.PROF + '</td>';
+                        strRow += '<td>' + course.ROOM + '</td>';
+                        strRow += '<td>' + course.SECTION + '</td>';
+                        strRow += '<td>' + course.STARTAM_PM + '</td>';
+                        strRow += '<td>' + course.STARTTIME + '</td>';
+                        strRow += '<td>' + course.STUDENTCOUNT + '</td>';
+                        strRow += '<td>' + course.TITLE + '</td>';
+                        strRow += '<td><button class="btn btn-primary btnEditEmployee" type="button" data-crn="' + course.CRN + '">Show Details</button></td>';
+                        strRow += '</tr>';
+                        $('#tblClasses tbody').append(strRow);
+                    })
+                })
+            }
+            
+            
+//$.getJSON('https://simplefarm.thesimplehomestead.com/api/animals.php',{SessionID:strSessionID,AnimalType:strAnimalType},function(animals){
+                
+        })
+
+        $('#btnClear').on('click',function(){
+            $('#tblClasses tbody').empty();
+        })
+
+        $('#btnDetails').on('click',function(){
+            
+        })
+
+
+
+    </script>
+    
+</body>
+</html>
