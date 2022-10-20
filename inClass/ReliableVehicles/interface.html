@@ -3,6 +3,7 @@
 <!--//filter
 //input
 //query
+//be able to tell how many students are on campus during certain timeframe
 -->
 
 <!DOCTYPE html>
@@ -20,13 +21,13 @@
         <div class="col-12 d-flex justify-content-center align-items-center">
             <div class="card col-12 col-md-10 offset-md-1">
                 <div class="card-head">
-                    <div class="d-flex col-12 justify-content-between">
+                    <div class="d-flex col-12 justify-content-between mt-2 ">
                         <h3>Class Finder</h3>
                     </div>
                 </div>
                 <div class="card-body">
                     <form>
-                        <div class="form-group">
+                        <div class="form-group" id="filterSearch" >
                             <label for="txtTermSearch" class="form-label mt-4">Search Term</label>
                             <input class="form-control" type="text" id="txtTermSearch" placeholder="Term" required>
                             <label for="txtSubjectSearch" class="form-label mt-4">Search Subject</label>
@@ -43,14 +44,13 @@
                             <input class="form-control" type="text" id="txtSectionSearch" placeholder="Section">
                         </div>
                         <button class="btn btn-primary mt-2" id="btnSearch" type="button">Find</button>
-                        <button class="btn btn-primary mt-2" id="btnClear" type="button">Clear</button>
+                        <button class="btn btn-secondary mt-2" id="btnClear" type="button">Clear</button>
 
                     </form>
                     <hr>
                     <table id="tblClasses" class="table mt-5">
                         <thead>
                             <tr><th>Building</th><th>Class Days</th><th>Course</th><th>Credits</th><th>CRN</th><th>Department</th><th>End Am or PM</th><th>End Time</th><th>Is Location Determined</th><th>Is Online</th><th>Is Open</th><th>Is Time Determined</th><th>Max Students</th><th>Professor</th><th>Room</th><th>Section</th><th>Start am or Pm</th><th>Start Time</th><th>student count</th><th>title</th></tr>
-                            <button class="btn btn-primary mt-2" id="btnDetails" type="button">Show Details</button>
                         </thead>
                         <tbody>
                         </tbody>
@@ -68,6 +68,8 @@
         let portApiUrl = 'https://portapi.tntech.edu/express/api/unprotected/';
 
         $('#btnSearch').on('click',function(){
+            $('#tblClasses tbody').empty();
+
             let Term = ($('#txtTermSearch').val());
             let Department = $('#txtSubjectSearch').val();
             let MinCap = ($('#txtMinCapSearch').val());
@@ -161,7 +163,10 @@
         })
 
         $('#btnClear').on('click',function(){
-            $('#tblClasses tbody').empty();
+            const inputs = document.querySelectorAll('#txtTermSearch, #txtSubjectSearch, #txtMinCapSearch, #txtBuildingSearch, #txtRoomSearch, #txtCourseSearch, #txtSectionSearch');
+            inputs.forEach(input => {
+                input.value = '';
+            });
         })
 
         $('#btnDetails').on('click',function(){
