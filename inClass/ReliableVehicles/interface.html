@@ -14,43 +14,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class Selector</title>
     <link href="css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="css/lib/bootstrap_theme.min.css" rel="stylesheet">
 </head>
-<body class="vh-100 bg-primary d-flex">
+<body class="vh-100 bg-dark d-flex text-light">
 
     <div id="divClassDashboard" class="col-12 mt-5">
-        <div class="col-12 d-flex justify-content-center align-items-center">
+        <div class="col-12 justify-content-center align-items-center">
             <div class="card col-12 col-md-10 offset-md-1">
                 <div class="card-head">
                     <div class="d-flex col-12 justify-content-between mt-2 ">
-                        <h3>Class Finder</h3>
+                        <h2 style="padding-left:15px;padding-top:5px;">Class Stats</h2>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div></div>
+                    <div></div> 
+                    <div></div> 
+                    <div></div> 
+                    <div></div> 
+                    <div></div> 
+                </div>
+            </div>
+            <div class="card col-12 col-md-10 offset-md-1 mt-5">
+                <div class="card-head">
+                    <div class="d-flex col-12 justify-content-between mt-2 ">
+                        <h2 style="padding-left:15px;padding-top:5px;">Class Finder</h2>
                     </div>
                 </div>
                 <div class="card-body">
                     <form>
                         <div class="form-group" id="filterSearch" >
-                            <label for="txtTermSearch" class="form-label mt-4">Search Term</label>
-                            <input class="form-control" type="text" id="txtTermSearch" placeholder="Term" required>
+                            <label for="txtTermSearch" class="form-label mt-4">Search Term (required)</label>
+                            <input class="form-control" type="text" id="txtTermSearch" placeholder="202280" required>
                             <label for="txtSubjectSearch" class="form-label mt-4">Search Subject</label>
-                            <input class="form-control" type="text" id="txtSubjectSearch" placeholder="Subject">
+                            <input class="form-control" type="text" id="txtSubjectSearch" placeholder="CSC">
                             <label for="txtMinCapSearch" class="form-label mt-4">Search MinCap</label>
                             <input class="form-control" type="text" id="txtMinCapSearch" placeholder="MinCap">
                             <label for="txtBuildingSearch" class="form-label mt-4">Search Building</label>
-                            <input class="form-control" type="text" id="txtBuildingSearch" placeholder="Building">
+                            <input class="form-control" type="text" id="txtBuildingSearch" placeholder="BRUN">
                             <label for="txtRoomSearch" class="form-label mt-4">Search Room</label>
-                            <input class="form-control" type="text" id="txtRoomSearch" placeholder="Room">
+                            <input class="form-control" type="text" id="txtRoomSearch" placeholder="210">
                             <label for="txtCourseSearch" class="form-label mt-4">Search Course</label>
-                            <input class="form-control" type="text" id="txtCourseSearch" placeholder="Course">
+                            <input class="form-control" type="text" id="txtCourseSearch" placeholder="3100">
                             <label for="txtSectionSearch" class="form-label mt-4">Search Section</label>
-                            <input class="form-control" type="text" id="txtSectionSearch" placeholder="Section">
+                            <input class="form-control" type="text" id="txtSectionSearch" placeholder="001">
+                            <label for="txtStartSearch" class="form-label mt-4">Search Start Time</label>
+                            <input class="form-control" type="time" id="txtStartSearch" placeholder="Start">
+                            <label for="txtEndSearch" class="form-label mt-4">Search End Time</label>
+                            <input class="form-control" type="time" id="txtEndSearch" placeholder="End">
                         </div>
                         <button class="btn btn-primary mt-2" id="btnSearch" type="button">Find</button>
                         <button class="btn btn-secondary mt-2" id="btnClear" type="button">Clear</button>
 
                     </form>
-                    <hr>
-                    <table id="tblClasses" class="table mt-5">
+                </div>
+            </div>
+                
+            <div class="card col-12 col-md-10 offset-md-1 mt-5">
+                    <div class="card-head">
+                        <div class="d-flex col-12 justify-content-between mt-2 ">
+                            <h2 style="padding-left:15px;padding-top:5px;" id="resultDisplay">Results</h2>
+                        </div>
+                    </div>
+                    <table id="tblClasses" class="table mt-5 text-light">
                         <thead>
-                            <tr><th>Building</th><th>Class Days</th><th>Course</th><th>Credits</th><th>CRN</th><th>Department</th><th>End Am or PM</th><th>End Time</th><th>Is Location Determined</th><th>Is Online</th><th>Is Open</th><th>Is Time Determined</th><th>Max Students</th><th>Professor</th><th>Room</th><th>Section</th><th>Start am or Pm</th><th>Start Time</th><th>student count</th><th>title</th></tr>
+                            <tr><th>Department</th><th>Course</th><th>Title</th><th>Location</th><th>Class Days</th><th>Credits</th><th>Student Count</th><th>Time</th><th>Professor</th><th></th></tr>
                         </thead>
                         <tbody>
                         </tbody>
@@ -77,11 +105,12 @@
             let Room = ($('#txtRoomSearch').val());
             let Course = ($('#txtCourseSearch').val());
             let Section = ($('#txtSectionSearch').val());
+            let Start = ($('#txtStartSearch').val());
+            let End = ($('#txtEndSearch').val());
             let strErrorMessage = '';
             let blnError = false;
+            let numResults = 0;
             console.log('Test');
-
-            
             
             if(Term != ''){
                 console.log('Term if Statement procd')
@@ -117,61 +146,424 @@
             }
 
 
-
-            if(blnError == true){
-                Swal.fire({
-                        icon: 'error',
-                        title: 'Oh No',
-                        text: strErrorMessage
+            if(End == '' && Start == ''){
+                if(blnError == true){
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Oh No',
+                            text: strErrorMessage
+                            })
+                }
+                else {
+                    $.getJSON(strURL,function(courses){
+                        $(document).on('click', '.btnDetails', function(){
+                            let strCRN = $(this).attr('data-crn');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oh No',
+                                text: 'strErrorMessage'
+                            })
                         })
-            }
-            else {
-                $.getJSON(strURL,function(courses){
-                    $.each(courses, function(index,course){
-                        let strRow = '';
-                        strRow += '<tr>';
-                        strRow += '<td>' + course.BUILDING + '</td>';
-                        strRow += '<td>' + course.CLASSDAYS + '</td>';
-                        strRow += '<td>' + course.COURSE + '</td>';
-                        strRow += '<td>' + course.CREDITS + '</td>';
-                        strRow += '<td>' + course.CRN + '</td>';
-                        strRow += '<td>' + course.DEPARTMENT + '</td>';
-                        strRow += '<td>' + course.ENDAM_PM + '</td>';
-                        strRow += '<td>' + course.ENDTIME + '</td>';
-                        strRow += '<td>' + course.ISLOCDETERMINED + '</td>';
-                        strRow += '<td>' + course.ISONLINE + '</td>';
-                        strRow += '<td>' + course.ISOPEN + '</td>';
-                        strRow += '<td>' + course.ISTIMEDETERMINED + '</td>';
-                        strRow += '<td>' + course.MAXIMUMSTUDENTS + '</td>';
-                        strRow += '<td>' + course.PROF + '</td>';
-                        strRow += '<td>' + course.ROOM + '</td>';
-                        strRow += '<td>' + course.SECTION + '</td>';
-                        strRow += '<td>' + course.STARTAM_PM + '</td>';
-                        strRow += '<td>' + course.STARTTIME + '</td>';
-                        strRow += '<td>' + course.STUDENTCOUNT + '</td>';
-                        strRow += '<td>' + course.TITLE + '</td>';
-                        strRow += '<td><button class="btn btn-primary btnEditEmployee" type="button" data-crn="' + course.CRN + '">Show Details</button></td>';
-                        strRow += '</tr>';
-                        $('#tblClasses tbody').append(strRow);
+                        $.each(courses, function(index,course){
+                            numResults += 1; //will be used to display the number of results generated
+                            let strRow = '';
+                            strRow += '<tr>';
+
+                            if (course.DEPARTMENT != null){
+                                strRow += '<td>' + course.DEPARTMENT + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.COURSE != null && course.SECTION != null && course.CRN != null){
+                                strRow += '<td>' + course.COURSE + '-' + course.SECTION + ' (' + course.CRN + ')</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.TITLE != null){
+                                strRow += '<td>' + course.TITLE + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.BUILDING != null && course.ROOM != null){
+                                strRow += '<td>' + course.BUILDING + ' ' + course.ROOM + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+                                
+                            if (course.CLASSDAYS != null){
+                                strRow += '<td>' + course.CLASSDAYS + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.CREDITS != null){
+                                strRow += '<td>' + course.CREDITS + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.STUDENTCOUNT != null){
+                                strRow += '<td>' + course.STUDENTCOUNT + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.STARTTIME != null && course.ENDTIME != null){
+                                let startHour = course.STARTTIME[0] + course.STARTTIME[1];
+                                startHour = startHour % 12;
+                                if (startHour == 0){
+                                    startHour = 12;
+                                }
+                                let startTime = startHour + ':' + course.STARTTIME[2] + course.STARTTIME[3];
+
+                                let endHour = course.ENDTIME[0] + course.ENDTIME[1];
+                                endHour = endHour % 12;
+                                if (endHour == 0){
+                                    endHour = 12;
+                                }
+                                let endTime = endHour + ':' + course.ENDTIME[2] + course.ENDTIME[3];
+
+                                strRow += '<td>' + startTime + course.STARTAM_PM + '-' + endTime + course.ENDAM_PM + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.PROF != null){
+                                strRow += '<td>' + course.PROF + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            strRow += '<td><button class="btn btn-primary btnDetails" type="button" data-crn="' + course.CRN + '">Show Details</button></td>';
+                            strRow += '</tr>';
+                            $('#tblClasses tbody').append(strRow);
+                        })
                     })
-                })
-            }
+                }
+                
+
+            } else if(Start != '' && End != ''){
+                Start = Start.replace(':','');
+                End = End.replace(':','');
+                if(blnError == true){
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Oh No',
+                            text: strErrorMessage
+                            })
+                }
+                else {
+                    $.getJSON(strURL,function(courses){
+                        $(document).on('click', '.btnDetails', function(){
+                            let strCRN = $(this).attr('data-crn');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oh No',
+                                text: 'strErrorMessage'
+                            })
+                        })
+                        $.each(courses, function(index,course){
+                            numResults += 1; //will be used to display the number of results generated
+                            let strRow = '';
+                            strRow += '<tr>';
+
+                            if (course.DEPARTMENT != null){
+                                strRow += '<td>' + course.DEPARTMENT + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.COURSE != null && course.SECTION != null && course.CRN != null){
+                                strRow += '<td>' + course.COURSE + '-' + course.SECTION + ' (' + course.CRN + ')</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.TITLE != null){
+                                strRow += '<td>' + course.TITLE + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.BUILDING != null && course.ROOM != null){
+                                strRow += '<td>' + course.BUILDING + ' ' + course.ROOM + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+                                
+                            if (course.CLASSDAYS != null){
+                                strRow += '<td>' + course.CLASSDAYS + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.CREDITS != null){
+                                strRow += '<td>' + course.CREDITS + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.STUDENTCOUNT != null){
+                                strRow += '<td>' + course.STUDENTCOUNT + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.STARTTIME != null && course.ENDTIME != null){
+                                let startHour = course.STARTTIME[0] + course.STARTTIME[1];
+                                startHour = startHour % 12;
+                                if (startHour == 0){
+                                    startHour = 12;
+                                }
+                                let startTime = startHour + ':' + course.STARTTIME[2] + course.STARTTIME[3];
+
+                                let endHour = course.ENDTIME[0] + course.ENDTIME[1];
+                                endHour = endHour % 12;
+                                if (endHour == 0){
+                                    endHour = 12;
+                                }
+                                let endTime = endHour + ':' + course.ENDTIME[2] + course.ENDTIME[3];
+
+                                strRow += '<td>' + startTime + course.STARTAM_PM + '-' + endTime + course.ENDAM_PM + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.PROF != null){
+                                strRow += '<td>' + course.PROF + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            strRow += '<td><button class="btn btn-primary btnDetails" type="button" data-crn="' + course.CRN + '">Show Details</button></td>';
+                            strRow += '</tr>';
+                            
+                            if(course.STARTTIME == Start && course.ENDTIME == End){
+                                $('#tblClasses tbody').append(strRow);
+                            }
+                        })
+                    })
+                }
+            } else if(Start != ''){
+                Start = Start.replace(':','');
+                if(blnError == true){
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Oh No',
+                            text: strErrorMessage
+                            })
+                }
+                else {
+                    $.getJSON(strURL,function(courses){
+                        $(document).on('click', '.btnDetails', function(){
+                            let strCRN = $(this).attr('data-crn');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oh No',
+                                text: 'strErrorMessage'
+                            })
+                        })
+                        $.each(courses, function(index,course){
+                            numResults += 1; //will be used to display the number of results generated
+                            let strRow = '';
+                            strRow += '<tr>';
+
+                            if (course.DEPARTMENT != null){
+                                strRow += '<td>' + course.DEPARTMENT + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.COURSE != null && course.SECTION != null && course.CRN != null){
+                                strRow += '<td>' + course.COURSE + '-' + course.SECTION + ' (' + course.CRN + ')</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.TITLE != null){
+                                strRow += '<td>' + course.TITLE + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.BUILDING != null && course.ROOM != null){
+                                strRow += '<td>' + course.BUILDING + ' ' + course.ROOM + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+                                
+                            if (course.CLASSDAYS != null){
+                                strRow += '<td>' + course.CLASSDAYS + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.CREDITS != null){
+                                strRow += '<td>' + course.CREDITS + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.STUDENTCOUNT != null){
+                                strRow += '<td>' + course.STUDENTCOUNT + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.STARTTIME != null && course.ENDTIME != null){
+                                let startHour = course.STARTTIME[0] + course.STARTTIME[1];
+                                startHour = startHour % 12;
+                                if (startHour == 0){
+                                    startHour = 12;
+                                }
+                                let startTime = startHour + ':' + course.STARTTIME[2] + course.STARTTIME[3];
+
+                                let endHour = course.ENDTIME[0] + course.ENDTIME[1];
+                                endHour = endHour % 12;
+                                if (endHour == 0){
+                                    endHour = 12;
+                                }
+                                let endTime = endHour + ':' + course.ENDTIME[2] + course.ENDTIME[3];
+
+                                strRow += '<td>' + startTime + course.STARTAM_PM + '-' + endTime + course.ENDAM_PM + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.PROF != null){
+                                strRow += '<td>' + course.PROF + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            strRow += '<td><button class="btn btn-primary btnDetails" type="button" data-crn="' + course.CRN + '">Show Details</button></td>';
+                            strRow += '</tr>';
+                            
+                            if(course.STARTTIME == Start){
+                                $('#tblClasses tbody').append(strRow);
+                            }
+                        })
+                    })
+                }
+
+            } else if(End != ''){
+                End = End.replace(':','');
+                if(blnError == true){
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Oh No',
+                            text: strErrorMessage
+                            })
+                }
+                else {
+                    $.getJSON(strURL,function(courses){
+                        $(document).on('click', '.btnDetails', function(){
+                            let strCRN = $(this).attr('data-crn');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oh No',
+                                text: 'strErrorMessage'
+                            })
+                        })
+                        $.each(courses, function(index,course){
+                            numResults += 1; //will be used to display the number of results generated
+                            let strRow = '';
+                            strRow += '<tr>';
+
+                            if (course.DEPARTMENT != null){
+                                strRow += '<td>' + course.DEPARTMENT + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.COURSE != null && course.SECTION != null && course.CRN != null){
+                                strRow += '<td>' + course.COURSE + '-' + course.SECTION + ' (' + course.CRN + ')</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.TITLE != null){
+                                strRow += '<td>' + course.TITLE + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.BUILDING != null && course.ROOM != null){
+                                strRow += '<td>' + course.BUILDING + ' ' + course.ROOM + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+                                
+                            if (course.CLASSDAYS != null){
+                                strRow += '<td>' + course.CLASSDAYS + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.CREDITS != null){
+                                strRow += '<td>' + course.CREDITS + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.STUDENTCOUNT != null){
+                                strRow += '<td>' + course.STUDENTCOUNT + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.STARTTIME != null && course.ENDTIME != null){
+                                let startHour = course.STARTTIME[0] + course.STARTTIME[1];
+                                startHour = startHour % 12;
+                                if (startHour == 0){
+                                    startHour = 12;
+                                }
+                                let startTime = startHour + ':' + course.STARTTIME[2] + course.STARTTIME[3];
+
+                                let endHour = course.ENDTIME[0] + course.ENDTIME[1];
+                                endHour = endHour % 12;
+                                if (endHour == 0){
+                                    endHour = 12;
+                                }
+                                let endTime = endHour + ':' + course.ENDTIME[2] + course.ENDTIME[3];
+
+                                strRow += '<td>' + startTime + course.STARTAM_PM + '-' + endTime + course.ENDAM_PM + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            if (course.PROF != null){
+                                strRow += '<td>' + course.PROF + '</td>';
+                            } else {
+                                strRow += '<td>N/A</td>';
+                            }
+
+                            strRow += '<td><button class="btn btn-primary btnDetails" type="button" data-crn="' + course.CRN + '">Show Details</button></td>';
+                            strRow += '</tr>';
+                            
+                            if(course.ENDTIME == End){
+                                $('#tblClasses tbody').append(strRow);
+                            }
+                        })
+                    })
+                }
             
+            }  
+
             
-//$.getJSON('https://simplefarm.thesimplehomestead.com/api/animals.php',{SessionID:strSessionID,AnimalType:strAnimalType},function(animals){
                 
         })
 
         $('#btnClear').on('click',function(){
-            const inputs = document.querySelectorAll('#txtTermSearch, #txtSubjectSearch, #txtMinCapSearch, #txtBuildingSearch, #txtRoomSearch, #txtCourseSearch, #txtSectionSearch');
+            const inputs = document.querySelectorAll('#txtTermSearch, #txtSubjectSearch, #txtMinCapSearch, #txtBuildingSearch, #txtRoomSearch, #txtCourseSearch, #txtSectionSearch, #txtStartSearch, #txtEndSearch');
             inputs.forEach(input => {
                 input.value = '';
             });
         })
 
-        $('#btnDetails').on('click',function(){
-            
-        })
 
 
 
