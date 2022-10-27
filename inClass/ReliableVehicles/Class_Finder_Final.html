@@ -1,0 +1,480 @@
+<!--//filter
+//input
+//query
+//be able to tell how many students are on campus during certain timeframe
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Selector</title>
+    <link href="css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="css/lib/bootstrap_theme.min.css" rel="stylesheet">
+    <style>
+        .align-left {
+            text-align:left;
+        }
+    </style>
+</head>
+<body class="vh-100 bg-dark d-flex text-light">
+    <div id="divClassDashboard" class="col-12 mt-5">
+        <div class="col-12 justify-content-center align-items-center">
+            <div class="card col-12 col-md-10 offset-md-1">
+                <div class="card-head">
+                    <div class="d-flex col-12 justify-content-between mt-2 ">
+                        <h2 style="padding-left:15px;padding-top:5px;">Class Stats</h2>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="container text-center">
+                        <div class="row">
+                          <div class="col-11 col-sm-12 col-md-3 col-lg bg-success m-4">
+                            <h1>Total Number of Students on Campus</h1>
+                            <div id="divTotal"></div>
+                          </div>
+                          <div class="col-11 col-sm-12 col-md-3 col-lg bg-success m-4">
+                            <h1>Monday</h1>
+                            <div id="divMonday">
+                            </div>
+                          </div>
+                          <div class="col-11 col-sm-12 col-md-3 col-lg bg-success m-4">
+                            <h1>Tuesday</h1>
+                            <div id="divTuesday"></div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-11 col-sm-12 col-md-3 col-lg bg-success m-4">
+                            <h1>Wednesday</h1>
+                            <div id="divWednesday"></div>
+                          </div>
+                          <div class="col-11 col-sm-12 col-md-3 col-lg bg-success m-4">
+                            <h1>Thursday</h1>
+                            <div id="divThursday"></div>
+                          </div>
+                          <div class="col-11 col-sm-12 col-md-3 col-lg bg-success m-4">
+                            <h1>Friday</h1>
+                            <div id="divFriday"></div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+            <div class="card col-12 col-md-10 offset-md-1 mt-5">
+                <div class="card-head">
+                    <div class="d-flex col-12 justify-content-between mt-2 ">
+                        <h2 style="padding-left:15px;padding-top:5px;">Class Finder</h2>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group" id="filterSearch" >
+                            <label for="txtTermSearch" class="form-label mt-4"> Search Term (required)</label>
+                            <input class="form-control" type="text" id="txtTermSearch" placeholder="e.g. 202280" aria-label="Enter Term" required>
+                            <label for="txtSubjectSearch" class="form-label mt-4">Search Subject</label>
+                            <input class="form-control" type="text" id="txtSubjectSearch" placeholder="e.g. CSC" aria-label="Enter Subject">
+                            <label for="txtMinCapSearch" class="form-label mt-4">Search Minimum capacity</label>
+                            <input class="form-control" type="text" id="txtMinCapSearch" placeholder="e.g. 30" aria-label="Enter Minimum Capacity">
+                            <label for="txtBuildingSearch" class="form-label mt-4">Search Building</label>
+                            <input class="form-control" type="text" id="txtBuildingSearch" placeholder="e.g. BRUN" aria-label="Enter Building">
+                            <label for="txtRoomSearch" class="form-label mt-4">Search Room</label>
+                            <input class="form-control" type="text" id="txtRoomSearch" placeholder="e.g. 210" aria-label="Enter Room Number">
+                            <label for="txtCourseSearch" class="form-label mt-4">Search Course</label>
+                            <input class="form-control" type="text" id="txtCourseSearch" placeholder="e.g. 3100" aria-label="Enter Course Number">
+                            <label for="txtSectionSearch" class="form-label mt-4">Search Section</label>
+                            <input class="form-control" type="text" id="txtSectionSearch" placeholder="e.g. 001" aria-label="Enter Section Number">
+                            <label for="txtStartSearch" class="form-label mt-4">Search Start Time</label>
+                            <input class="form-control" type="time" id="txtStartSearch" placeholder="x" aria-label="Enter Start Time">
+                            <label for="txtEndSearch" class="form-label mt-4">Search End Time</label>
+                            <input class="form-control" type="time" id="txtEndSearch" placeholder="End" aria-label="Enter End Time">
+
+                            <label class="form-label mt-4">Select Class Days:
+                                <div class="form-check">
+                                    <label for="checkMonday" class="form-check-label m-4">
+                                        <input id="checkMonday" class="form-check-input" type="checkbox" value="M" aria-label="Monday Checkbox">
+                                        Monday
+                                    </label>
+                                    
+                                    <label for="checkTuesday" class="form-check-label m-4">
+                                        <input id="checkTuesday" class="form-check-input" type="checkbox" value="T" aria-label="Tuesday Checkbox">
+                                        Tuesday
+                                    </label>
+
+                                    <label for="checkWednesday" class="form-check-label m-4">
+                                        <input id="checkWednesday" class="form-check-input" type="checkbox" value="W" aria-label="Wednesday Checkbox">
+                                        Wednesday
+                                    </label>
+
+                                    <label for="checkThursday" class="form-check-label m-4">
+                                        <input id="checkThursday" class="form-check-input" type="checkbox" value="R" aria-label="Thursday Checkbox">
+                                        Thursday
+                                    </label>
+
+                                    <label for="checkFriday" class="form-check-label m-4">
+                                        <input id="checkFriday" class="form-check-input" type="checkbox" value="F" aria-label="Friday Checkbox">
+                                        Friday
+                                    </label>
+                                </div>
+                            </label> 
+                        </div>
+                        <div class="btn-group col-12">
+                            <button class="btn btn-primary mt-2 col-12 col-sm-6" id="btnSearch" type="button">Find</button>
+                            <button class="btn btn-secondary mt-2 col-12 col-sm-6" id="btnClear" type="button">Clear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+                
+            <div class="card col-12 col-md-10 offset-md-1 mt-5 d-none" id="divResults">
+                    <div class="card-head">
+                        <div class="d-flex col-12 justify-content-between mt-2 ">
+                            <h2 style="padding-left:15px;padding-top:5px;" id="resultDisplay">Results</h2>
+                        </div>
+                    </div>
+                    <table id="tblClasses" class="table mt-5 text-light">
+                        <thead>
+                            <tr><th>Department</th><th>Course</th><th>Title</th><th>Location</th><th>Class Days</th><th>Credits</th><th>Student Count</th><th>Time</th><th>Professor</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="js/lib/bootstrap.bundle.min.js"></script>
+    <script src="js/lib/sweetalert2@11.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script>
+
+        //$.getJSON('https://portapi.tntech.edu/express/api/unprotected/getCourseInfoByAPIKey.php',{Key:'5B2FB0FC-79F6-47FF-839D-DA910DD9D17D',Term:'202280'})
+        let strURL = "https://portapi.tntech.edu/express/api/unprotected/getCourseInfoByAPIKey.php?Key=5B2FB0FC-79F6-47FF-839D-DA910DD9D17D";
+        let portApiUrl = 'https://portapi.tntech.edu/express/api/unprotected/';
+        let passedCourses = [];
+
+        $('#btnSearch').on('click',function(){
+            $('#divResults').removeClass('d-none');
+            $('#tblClasses').DataTable().destroy();
+            $('#tblClasses tbody').empty();
+
+            $('#divTotal').empty();
+            $('#divMonday').empty();
+            $('#divTuesday').empty();
+            $('#divWednesday').empty();
+            $('#divThursday').empty();
+            $('#divFriday').empty();
+
+            let Term = ($('#txtTermSearch').val());
+            let Department = $('#txtSubjectSearch').val();
+            let MinCap = ($('#txtMinCapSearch').val());
+            let Building = ($('#txtBuildingSearch').val());
+            let Room = ($('#txtRoomSearch').val());
+            let Course = ($('#txtCourseSearch').val());
+            let Section = ($('#txtSectionSearch').val());
+            let Start = ($('#txtStartSearch').val());
+            let End = ($('#txtEndSearch').val());
+            const Meet = [];
+            let strErrorMessage = '';
+            let strFilterMessage = '';
+            let blnError = false;
+            let numResults = 0;
+            let numStudents = 0;
+            let numMondayStudents = 0;
+            let numTuesdayStudents = 0;
+            let numWednesdayStudents = 0;
+            let numThursdayStudents = 0;
+            let numFridayStudents = 0;
+            
+            if(Term != ''){
+                strURL += "&Term=" + Term;
+                strFilterMessage += '<h2>Term: ' + Term + '</h2>';
+            } else {
+                blnError = true;
+                strErrorMessage += "You must include a term in your search.\n"
+            }
+            if(Department != ''){
+                strURL += "&Subject=" + Department.toUpperCase();
+                strFilterMessage += '<h2>Dept: ' + Department.toUpperCase() + '</h2>';
+            }
+            if(MinCap != ''){
+                strURL += "&MinCap=" + MinCap;
+                strFilterMessage+= '<h2>MinCap: ' + MinCap + '<h2>';
+            }
+            if(Building != ''){
+                strURL += "&Building=" + Building.toUpperCase();
+                strFilterMessage += '<h2>Building: ' + Building.toUpperCase() + '</h2>';
+            }if(Room != ''){
+                strURL += "&Room=" + Room; 
+                strFilterMessage += '<h2>Room: ' + Room + '</h2>'; 
+            }if(Course != ''){
+                strURL += "&Course=" + Course; 
+                strFilterMessage += '<h2>Course: ' + Course + '</h2>';  
+            }if(Section != ''){
+                strURL += "&Section=" + Section;
+                strFilterMessage += '<h2>Section: ' + Section + '</h2>';
+            }
+            if($('#checkMonday').is(":checked") || $('#checkTuesday').is(":checked") || $('#checkWednesDay').is(":checked") || $('#checkThursday').is(":checked") || $('#checkFriday').is(":checked")) {
+                strFilterMessage += '<h2>Day(s): ';
+                if ($('#checkMonday').is(":checked")){
+                    Meet.push($('#checkMonday').val());
+                    strFilterMessage += 'M';           
+                }
+                if ($('#checkTuesday').is(":checked")){
+                    Meet.push($('#checkTuesday').val());
+                    strFilterMessage += 'T';
+                }
+                if ($('#checkWednesday').is(":checked")){
+                    Meet.push($('#checkWednesday').val());
+                    strFilterMessage += 'W';
+
+                }
+                if ($('#checkThursday').is(":checked")){
+                    Meet.push($('#checkThursday').val());
+                    strFilterMessage += 'R';
+                }
+                if ($('#checkFriday').is(":checked")){
+                    Meet.push($('#checkFriday').val());
+                    strFilterMessage += 'F';
+                }
+                strFilterMessage += '</h2>';
+            }
+
+            if(Start != '') {
+                strFilterMessage += '<h2>Time: ' + Start + '-';
+                if(End != '') {
+                    strFilterMessage += End;
+                }
+                else {
+                    strFilterMessage += 'End of Day';
+                }
+                strFilterMessage += '</h2>'
+            }
+            else if(End != '') {
+                strFilterMessage += '<h2>Time: Start of day -' + End + '</h2>';
+            }
+
+
+
+            function findDay(arr, str) {
+                if (!str){
+                    return false;
+                } 
+                if(arr.length == 0){
+                    return true;
+                }
+                const contains = arr.some(element => {
+                   if (str.includes(element)) {
+                        return true;
+                    }
+                    return false;
+                });
+                return contains;
+                
+            };
+                if(blnError == true){
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Oh No',
+                            text: strErrorMessage
+                            })
+                }
+                else {
+                    $.getJSON(strURL,function(courses){
+                        $(document).on('click', '.btnDetails', function(){
+                            let index = $(this).attr('data');
+                            let body =  '<div class="align-left">' +
+                                        '<p>Class Name   : ' + passedCourses[index].Name + '</p>' +
+                                        '<p>CRN          : ' + passedCourses[index].CRN + '</p>' +
+                                        '<p>Professor    : ' + passedCourses[index].Professor + '</p>' +
+                                        '<p>Time         : ' + passedCourses[index].StartTime + '-' + passedCourses[index].EndTime + '</p>' +
+                                        '<p>Class Days   : ' + passedCourses[index].ClassDays + '</p>' +
+                                        '<p>Location     : ' + passedCourses[index].ClassLocation + '</p>' +
+                                        '<p>Students     : ' + passedCourses[index].StudentCount + '</p>' +
+                                        '<p>Max Students : ' + passedCourses[index].MaxStudents + '</p>' +
+                                        '</div>'
+                                        ;
+                            Swal.fire({
+                                textalign: 'left',
+                                icon: 'info',
+                                title: 'More information',
+                                html:  body   
+                            })
+                        })
+                        $.each(courses, function(index,course){
+                            if((findDay(Meet, course.CLASSDAYS)) === true){
+                                numStudents += course.STUDENTCOUNT;
+
+                                let validClass = false;
+                                let strRow = '';
+                                strRow += '<tr>';
+
+                                if (course.DEPARTMENT != null){
+                                    strRow += '<td>' + course.DEPARTMENT + '</td>';
+                                } else {
+                                    strRow += '<td>N/A</td>';
+                                }
+
+                                if (course.COURSE != null && course.SECTION != null && course.CRN != null){
+                                    strRow += '<td>' + course.COURSE + '-' + course.SECTION + ' (' + course.CRN + ')</td>';
+                                } else {
+                                    strRow += '<td>N/A</td>';
+                                }
+
+                                if (course.TITLE != null){
+                                    strRow += '<td>' + course.TITLE + '</td>';
+                                } else {
+                                    strRow += '<td>N/A</td>';
+                                }
+
+                                if (course.BUILDING != null && course.ROOM != null){
+                                    strRow += '<td>' + course.BUILDING + ' ' + course.ROOM + '</td>';
+                                } else {
+                                    strRow += '<td>N/A</td>';
+                                }
+                                    
+                                if (course.CLASSDAYS != null){
+                                    strRow += '<td>' + course.CLASSDAYS + '</td>';
+                                } else {
+                                    strRow += '<td>N/A</td>';
+                                }
+
+                                if (course.CREDITS != null){
+                                    strRow += '<td>' + course.CREDITS + '</td>';
+                                } else {
+                                    strRow += '<td>N/A</td>';
+                                }
+
+                                if (course.STUDENTCOUNT != null){
+                                    strRow += '<td>' + course.STUDENTCOUNT + '</td>';
+                                } else {
+                                    strRow += '<td>N/A</td>';
+                                }
+
+                                if (course.STARTTIME != null && course.ENDTIME != null){
+                                    let startHour = course.STARTTIME[0] + course.STARTTIME[1];
+                                    startHour = startHour % 12;
+                                    if (startHour == 0){
+                                        startHour = 12;
+                                    }
+                                    let startTime = startHour + ':' + course.STARTTIME[2] + course.STARTTIME[3];
+
+                                    let endHour = course.ENDTIME[0] + course.ENDTIME[1];
+                                    endHour = endHour % 12;
+                                    if (endHour == 0){
+                                        endHour = 12;
+                                    }
+                                    let endTime = endHour + ':' + course.ENDTIME[2] + course.ENDTIME[3];
+
+                                    strRow += '<td>' + startTime + course.STARTAM_PM + '-' + endTime + course.ENDAM_PM + '</td>';
+                                } else {
+                                    strRow += '<td>N/A</td>';
+                                }
+
+                                if (course.PROF != null){
+                                    strRow += '<td>' + course.PROF + '</td>';
+                                } else {
+                                    strRow += '<td>N/A</td>';
+                                }
+
+
+
+                                
+
+                                strRow += '<td><button class="btn btn-info btnDetails" type="button" data="' + numResults + '" id="btnShowDetails">Show Details</button></td>';
+                                strRow += '</tr>';
+
+
+                                /*
+                                 * It's important to note, like Prof. Burchfield said in teams, since we are specifically looking for the students on campus and not the class times themselves,
+                                 * any class that ends or starts between the desired times should be included in the list, this will give the number of students on the campus during that time.
+                                 * It's also worth noting that timeslots not ending in two zeros or timeslots 
+                                 */
+                                if(Start == '' && End == '') {
+                                    validClass = true;
+                                }
+                                else if(Start =='' && (course.STARTTIME <= End)) {
+                                    validClass = true;
+                                }
+                                else if(End == '' && (Start <= course.ENDTIME) ) {
+                                    validClass = true;
+                                } else if((course.STARTTIME >= Start && course.STARTTIME  <= End) || (course.STARTTIME <= Start  && course.ENDTIME >= Start)){
+                                    validClass = true;
+                                }
+
+                                if(validClass){
+                                    let newCourse = {
+                                        Name: course.TITLE,
+                                        Dept: course.DEPARTMENT,
+                                        CourseNumber: course.COURSE,
+                                        CRN: course.CRN,
+                                        Professor: course.PROF,
+                                        StartTime: course.STARTTIME,
+                                        EndTime: course.ENDTIME,
+                                        ClassDays: course.CLASSDAYS,
+                                        ClassLocation: course.BUILDING + ' ' + course.ROOM,
+                                        StudentCount: course.STUDENTCOUNT,
+                                        MaxStudents: course.MAXIMUMSTUDENTS
+                                    };
+                                    passedCourses.push(newCourse);
+                                    numResults++;
+
+                                    $('#tblClasses tbody').append(strRow);
+
+
+                                    if(findDay(['M'], course.CLASSDAYS))
+                                        numMondayStudents += course.STUDENTCOUNT;
+                                    if(findDay(['T'], course.CLASSDAYS))
+                                        numTuesdayStudents += course.STUDENTCOUNT;
+                                    if(findDay(['W'], course.CLASSDAYS))
+                                        numWednesdayStudents += course.STUDENTCOUNT;
+                                    if(findDay(['R'], course.CLASSDAYS))
+                                        numThursdayStudents += course.STUDENTCOUNT;
+                                    if(findDay(['F'], course.CLASSDAYS))
+                                        numFridayStudents += course.STUDENTCOUNT;
+                                }
+                            }
+                        })
+                        
+                        console.log(passedCourses);
+                        $('#divTotal').append(strFilterMessage);
+                        $('#divMonday').append('<h1 class="display-1">' + numMondayStudents + '</h1>');
+                        $('#divTuesday').append('<h1 class="display-1">'  + numTuesdayStudents + '</h1>');
+                        $('#divWednesday').append('<h1 class="display-1">'  + numWednesdayStudents + '</h1>');
+                        $('#divThursday').append('<h1 class="display-1">'  + numThursdayStudents + '</h1>');
+                        $('#divFriday').append('<h1 class="display-1">'  + numFridayStudents + '</h1>');
+                        $('#tblClasses').DataTable({
+                            scrollY: 1000,
+                            scrollX: true,
+                            paging: false,
+                            searching: false,
+                        });
+                    })
+                }
+
+
+        })
+
+        $('#btnClear').on('click',function(){
+            const inputs = document.querySelectorAll('#txtTermSearch, #txtSubjectSearch, #txtMinCapSearch, #txtBuildingSearch, #txtRoomSearch, #txtCourseSearch, #txtSectionSearch, #txtStartSearch, #txtEndSearch');
+            inputs.forEach(input => {
+                input.value = '';
+            });
+
+            $('#tblClasses').DataTable().destroy();
+            $('#tblClasses tbody').empty();
+            $('#divResults').addClass('d-none');
+            $('#divTotal').empty();
+            $('#divMonday').empty();
+            $('#divTuesday').empty();
+            $('#divWednesday').empty();
+            $('#divThursday').empty();
+            $('#divFriday').empty();
+
+
+        })
+    </script>
+</body>
+</html>
