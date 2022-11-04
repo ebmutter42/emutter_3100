@@ -142,6 +142,28 @@
                     </table>
                 </div>
             </div>
+            <div class="card col-12 col-md-10 offset-md-1 mt-5" id="divPopularTime">
+                <div class="card-head">
+                    <div class="d-flex col-12 justify-content-between mt-2 ">
+                        <h2 style="padding-left:15px;padding-top:5px;" id="timeDisplay">Popular Times</h2>
+                    </div>
+                </div>
+                <table id="tblTimes" class="table mt-5 text-light">
+                    <thead>
+                        <tr><th></th><<th>8:00am-9:00am</th><th>9:00am-10:00am</th><th>10:00am-11:00am</th><th>11:00am-12:00pm</th><th>12:00pm-1:00pm</th><th>1:00pm-2:00pm</th><th>2:00pm-3:00pm</th><th>3:00pm-4:00pm</th><th>4:00pm-5:00pm</th><th>5:00pm-6:00pm</th><th>6:00pm-7:00pm</th><th>7:00pm-8:00pm</th><th>8:00pm-9:00pm</th></tr>
+                    </thead>
+                    <tbody>
+
+                        <tr id="rowMonday"><th>Monday</th></tr>
+                        <tr id="rowTuesday"><th>Tuesday</th></tr>
+                        <tr id="rowWednesday"><th>Wednesday</th></tr>
+                        <tr id="rowThursday"><th>Thursday</th></tr>
+                        <tr id="rowFriday"><th>Friday</th></tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
@@ -155,6 +177,11 @@
         let portApiUrl = 'https://portapi.tntech.edu/express/api/unprotected/';
         let passedCourses = [];
 
+        
+
+
+
+
         $('#btnSearch').on('click',function(){
             $('#divResults').removeClass('d-none');
             $('#tblClasses').DataTable().destroy();
@@ -166,6 +193,13 @@
             $('#divWednesday').empty();
             $('#divThursday').empty();
             $('#divFriday').empty();
+
+            $('#rowTotal').empty();
+            $('#rowMonday').empty();
+            $('#rowTuesday').empty();
+            $('#rowWednesday').empty();
+            $('#rowThursday').empty();
+            $('#rowFriday').empty();
 
             let Term = ($('#txtTermSearch').val());
             let Department = $('#txtSubjectSearch').val();
@@ -255,8 +289,6 @@
             else if(End != '') {
                 strFilterMessage += '<h2>Time: Start of day -' + End + '</h2>';
             }
-
-
 
             function findDay(arr, str) {
                 if (!str){
@@ -405,20 +437,8 @@
                                 }
 
                                 if(validClass){
-                                    let newCourse = {
-                                        Name: course.TITLE,
-                                        Dept: course.DEPARTMENT,
-                                        CourseNumber: course.COURSE,
-                                        CRN: course.CRN,
-                                        Professor: course.PROF,
-                                        StartTime: course.STARTTIME,
-                                        EndTime: course.ENDTIME,
-                                        ClassDays: course.CLASSDAYS,
-                                        ClassLocation: course.BUILDING + ' ' + course.ROOM,
-                                        StudentCount: course.STUDENTCOUNT,
-                                        MaxStudents: course.MAXIMUMSTUDENTS
-                                    };
-                                    passedCourses.push(newCourse);
+                                
+                                    passedCourses.push(course);
                                     numResults++;
 
                                     $('#tblClasses tbody').append(strRow);
@@ -445,6 +465,13 @@
                         $('#divWednesday').append('<h1 class="display-1">'  + numWednesdayStudents + '</h1>');
                         $('#divThursday').append('<h1 class="display-1">'  + numThursdayStudents + '</h1>');
                         $('#divFriday').append('<h1 class="display-1">'  + numFridayStudents + '</h1>');
+
+                        $('#rowMonday').append(allTimesCount(passedCourses, 'M'));
+                        $('#rowTuesday').append(allTimesCount(passedCourses, 'T'));
+                        $('#rowWednesday').append(allTimesCount(passedCourses, 'W'));
+                        $('#rowThursday').append(allTimesCount(passedCourses, 'R'));
+                        $('#rowFriday').append(allTimesCount(passedCourses, 'F'));
+
                         $('#tblClasses').DataTable({
                             scrollY: 1000,
                             scrollX: true,
@@ -454,6 +481,8 @@
                     })
                 }
 
+
+                
 
         })
 
@@ -475,6 +504,43 @@
 
 
         })
+
+        function totalStudents(arrClasses){
+            let intTotal = 0;
+            $.each(arrClasses,function(index, objCurrent){
+                intTotal += objCurrent.STUDENTCOUNT;
+            })
+            return intTotal;
+        }
+
+        function allTimesCount(arrClasses, strDay) {
+            let i = 800;
+            let t = 900;
+            let maxStudents = 0;
+            let maxTime = 0;
+            let arrTimes = [];
+            do {
+                let arrCurrent1 = arrClasses.filter(el => (el.STARTTIME >= i && el.STARTTIME <= t) || (el.ENDTIME >= i && el.ENDTIME <= t));
+                let arrCurrent = arrCurrent1.filter(el => el.CLASSDAYS.includes(strDay));
+                console.log(arrCurrent);
+                let currTotal = totalStudents(arrCurrent);
+                if(currTotal > maxStudents){
+                    maxStudents = currTotal;
+                    maxTime = i;
+                }
+                arrTimes.push(currTotal);
+                i += 100;
+                t += 100;
+            } while (i < 2200);
+            let strOutput = ''; 
+            for (let j = 0; j < arrTimes.length; j++){
+                strOutput += '<td>' + arrTimes[j] + '</td>';
+            }
+            console.log('done with ' + strDay);
+            return strOutput;
+            
+
+        }
     </script>
 </body>
 </html>
